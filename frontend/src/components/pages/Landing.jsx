@@ -34,7 +34,7 @@ const Landing = () => {
         </div>
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>shield</span>
-          <span className="font-label-code text-[10px] uppercase tracking-tighter">SOC2 Compliant</span>
+          <span className="font-label-code text-[10px] uppercase tracking-tighter">SOC1 Compliant</span>
         </div>
       </div>
     </div>
