@@ -1,21 +1,19 @@
-# Use Python 3.12 from official Docker image
 FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install system dependencies needed for building some Python packages
+# Install dnsutils and set DNS
 RUN apt-get update && apt-get install -y \
     gcc \
+    dnsutils \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first (to leverage Docker cache)
-COPY requirements.txt .
+# Use Google DNS for resolution
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
-# Install Python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
 COPY . .
 
-# Start the app with gunicorn
 CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app.main:app"]
