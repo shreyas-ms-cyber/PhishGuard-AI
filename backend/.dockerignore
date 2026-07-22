@@ -4,3 +4,4 @@ __pycache__/
 .env
 .git/
 *.db
+alembic/versions/__pycache__/
