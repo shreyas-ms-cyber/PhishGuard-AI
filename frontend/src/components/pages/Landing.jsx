@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 const Landing = () => {
   return (
     <div className="relative z-10 w-full max-w-4xl mx-auto px-margin-mobile md:px-0 flex flex-col items-center justify-center min-h-screen text-center">
+      {/* Inline SVG Shield – no font loading, no flicker */}
       <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 border border-primary/20 shadow-[0_0_30px_rgba(0,218,243,0.2)]">
-        <span className="material-symbols-outlined text-primary text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>security</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10 text-primary">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M9 12l2 2 4-4" />
+        </svg>
       </div>
       <h1 className="font-display text-display text-primary font-bold tracking-tight">PhishGuard AI</h1>
       <p className="font-label-code text-label-code text-on-surface-variant uppercase tracking-widest mt-2 opacity-60">System Protocol: Active</p>
