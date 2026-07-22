@@ -5,3 +5,5 @@ __pycache__/
 .git/
 *.db
 alembic/versions/__pycache__/
+Dockerfile
+.dockerignore
