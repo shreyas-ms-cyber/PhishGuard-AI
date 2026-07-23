@@ -14,7 +14,6 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    // Skip interceptor for auth endpoints to avoid loops
     const authEndpoints = ['/auth/refresh', '/auth/login', '/auth/register', '/auth/logout'];
     if (authEndpoints.some((endpoint) => originalRequest.url?.startsWith(endpoint))) {
       return Promise.reject(error);
