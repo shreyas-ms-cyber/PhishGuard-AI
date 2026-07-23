@@ -4,11 +4,6 @@ import { useTheme } from '../../contexts/ThemeContext';
 const About = () => {
   const { theme } = useTheme();
   const [imgError, setImgError] = useState(false);
-  const [imgVersion, setImgVersion] = useState(1);
-
-  useEffect(() => {
-    setImgVersion(Date.now());
-  }, []);
 
   return (
     <div className="space-y-6 pt-4 md:pt-0 w-full max-w-full">
@@ -31,22 +26,25 @@ const About = () => {
 
       {/* Developer Profile Card */}
       <div className="glass-card p-6 rounded-xl w-full flex flex-col md:flex-row items-center md:items-start gap-6">
-        {/* Photo - Image shows immediately */}
+        {/* Photo - Always visible */}
         <div className="flex-shrink-0">
-          <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-surface-variant flex items-center justify-center">
-            {!imgError ? (
-              <img
-                src={`/assets/images/profile-photo.jpg?v=${imgVersion}`}
-                alt="Shreyas M S"
-                className="w-full h-full object-cover"
-                onError={() => setImgError(true)}
-                loading="eager"
-                decoding="async"
-                fetchpriority="high"
-              />
-            ) : (
-              <span className="font-display text-4xl md:text-5xl text-primary font-bold">SM</span>
-            )}
+          <div 
+            className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-gradient-to-br from-primary/20 to-surface-variant flex items-center justify-center"
+            style={{
+              backgroundImage: `url('/assets/images/profile-photo.jpg')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <img
+              src="/assets/images/profile-photo.jpg"
+              alt="Shreyas M S"
+              className="w-full h-full object-cover opacity-0 transition-opacity duration-300"
+              onError={() => setImgError(true)}
+              onLoad={(e) => {
+                e.target.style.opacity = '1';
+              }}
+            />
           </div>
         </div>
 
