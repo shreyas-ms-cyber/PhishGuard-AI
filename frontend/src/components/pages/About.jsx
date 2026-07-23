@@ -35,8 +35,8 @@ const About = () => {
         {/* Photo */}
         <div className="flex-shrink-0">
           <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-surface-variant flex items-center justify-center relative">
-            {imgLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-surface-variant rounded-full">
+            {imgLoading && !imgError && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-surface-variant rounded-full">
                 <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
               </div>
             )}
