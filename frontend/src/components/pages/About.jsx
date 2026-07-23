@@ -4,6 +4,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 const About = () => {
   const { theme } = useTheme();
   const [imgError, setImgError] = useState(false);
+  const [imgLoading, setImgLoading] = useState(true);
   const [imgVersion, setImgVersion] = useState(1);
 
   useEffect(() => {
@@ -27,6 +28,13 @@ const About = () => {
           or <span className="text-error font-semibold">High Risk</span>, giving security teams a fast, reliable first line of defense against 
           phishing and social engineering attacks.
         </p>
+        <p className="font-body-md text-on-surface-variant mt-4">
+          <strong>Key features:</strong> IOC extraction, email header analysis, MITRE ATT&CK mapping, explainable risk scoring, case management, 
+          analyst notes, false‑positive feedback, audit logging, SOC dashboard, and PDF/CSV reporting. All detections are fully transparent and auditable.
+        </p>
+        <p className="font-body-md text-on-surface-variant mt-2">
+          <strong>Tech stack:</strong> React 18, FastAPI, PostgreSQL, JWT authentication, and secure HTTP‑only cookies.
+        </p>
       </div>
 
       {/* Developer Profile Card */}
@@ -34,13 +42,21 @@ const About = () => {
         {/* Photo */}
         <div className="flex-shrink-0">
           <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-surface-variant flex items-center justify-center">
+            {imgLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-surface-variant rounded-full">
+                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+              </div>
+            )}
             {!imgError ? (
               <img
                 src={`/assets/images/profile-photo.jpg?v=${imgVersion}`}
                 alt="Shreyas M S"
                 className="w-full h-full object-cover"
-                onError={() => setImgError(true)}
-                onLoad={() => setImgError(false)}
+                onError={() => {
+                  setImgError(true);
+                  setImgLoading(false);
+                }}
+                onLoad={() => setImgLoading(false)}
               />
             ) : (
               <span className="font-display text-4xl md:text-5xl text-primary font-bold">SM</span>
