@@ -31,7 +31,7 @@ const About = () => {
 
       {/* Developer Profile Card */}
       <div className="glass-card p-6 rounded-xl w-full flex flex-col md:flex-row items-center md:items-start gap-6">
-        {/* Photo */}
+        {/* Photo - Image shows immediately */}
         <div className="flex-shrink-0">
           <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-surface-variant flex items-center justify-center">
             {!imgError ? (
@@ -40,6 +40,9 @@ const About = () => {
                 alt="Shreyas M S"
                 className="w-full h-full object-cover"
                 onError={() => setImgError(true)}
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
               />
             ) : (
               <span className="font-display text-4xl md:text-5xl text-primary font-bold">SM</span>
