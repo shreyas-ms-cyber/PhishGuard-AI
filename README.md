@@ -1,6 +1,13 @@
 # 🛡️ PhishGuard AI
 **Smart Phishing Email Detector – Heuristic‑based, Explainable, and SOC‑Ready**
 
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://phishguard-ai-sooty-ten.vercel.app)
+[![Render](https://img.shields.io/badge/Deployed%20on-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://phishguard-ai-qwbb.onrender.com)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Made with](https://img.shields.io/badge/Made%20with-React-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+[![Made with](https://img.shields.io/badge/Made%20with-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Heuristic](https://img.shields.io/badge/Detection-Heuristic--based-orange?style=for-the-badge)](https://github.com/shreyas-ms-cyber/PhishGuard-AI)
+
 An interactive and production‑ready phishing analysis platform built with React and FastAPI. It helps Blue Team analysts, SOC practitioners, and security enthusiasts detect phishing emails, extract indicators of compromise (IOCs), map threats to MITRE ATT&CK, and manage investigations in a single workflow.
 
 🚀 **Live Demo**  
@@ -54,6 +61,8 @@ uvicorn app.main:app --reload --port 8000
 cd ../frontend
 npm install
 npm run dev
+
+
 
 
 
@@ -164,4 +173,11 @@ Unauthorized commercial use or redistribution without permission is prohibited.
 ---
 
 ⭐ Star this repo if you found it useful!
+
 https://img.shields.io/github/stars/shreyas-ms-cyber/PhishGuard-AI?style=social
+
+---
+
+Made with 🛡️ by Shreyas M S
+
+```
