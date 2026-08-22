@@ -166,7 +166,7 @@ const AIChat = () => {
                 className="text-on-surface-variant hover:text-error transition-colors p-1"
                 aria-label="Delete chat"
               >
-                <span className="material-symbols-outlined text-sm">close</span>
+                <span className="text-sm font-bold">×</span>
               </button>
             </div>
           ))}
@@ -174,7 +174,7 @@ const AIChat = () => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden">
+      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-[calc(100vh-420px)] md:h-[calc(100vh-440px)]">
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 custom-scrollbar">
           {messages.map((msg, idx) => (
             <div
