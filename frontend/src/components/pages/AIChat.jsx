@@ -25,15 +25,18 @@ const AIChat = () => {
   const currentChat = chats.find(c => c.id === activeChatId) || chats[0];
   const messages = currentChat?.messages || [];
 
+  // Persist chats
   useEffect(() => {
     localStorage.setItem('ai_chats', JSON.stringify(chats));
     localStorage.setItem('active_chat_id', String(activeChatId));
   }, [chats, activeChatId]);
 
+  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Send message
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     const userMsg = input.trim();
@@ -79,6 +82,7 @@ const AIChat = () => {
     }
   };
 
+  // New chat
   const newChat = () => {
     const newId = Date.now();
     setChats(prev => [...prev, {
@@ -91,6 +95,7 @@ const AIChat = () => {
     setActiveChatId(newId);
   };
 
+  // Delete chat
   const deleteChat = (chatId) => {
     if (chats.length <= 1) {
       setChats([{
@@ -109,6 +114,7 @@ const AIChat = () => {
     }
   };
 
+  // Auto-title
   const updateChatTitle = (chatId, newTitle) => {
     setChats(prev => prev.map(chat => {
       if (chat.id === chatId) {
@@ -132,43 +138,49 @@ const AIChat = () => {
   return (
     <div className="flex flex-col h-full w-full max-w-full pt-4 md:pt-0">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-headline-md text-headline-md font-bold text-primary">AI Chat</h2>
-        <button
-          onClick={newChat}
-          className="btn-primary text-sm py-1.5 px-4 flex items-center gap-1"
-        >
-          <span className="material-symbols-outlined text-sm">add</span>
-          New Chat
-        </button>
-      </div>
+      <header className="mb-4">
+        <h1 className="font-headline-md text-headline-md font-bold text-primary">AI Security Assistant</h1>
+        <p className="font-body-md text-body-md text-on-surface-variant">Ask me about cybersecurity fundamentals, best practices, and threat awareness.</p>
+      </header>
 
-      {/* Chat History Chips */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {chats.map((chat) => (
-          <div
-            key={chat.id}
-            className={`flex items-center gap-1 px-3 py-1 rounded-full cursor-pointer transition-colors ${
-              activeChatId === chat.id
-                ? 'bg-primary/20 text-primary border border-primary/30'
-                : 'bg-surface-variant/20 text-on-surface-variant hover:bg-surface-variant/30'
-            }`}
-            onClick={() => setActiveChatId(chat.id)}
+      {/* History Section */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">History</h3>
+          <button
+            onClick={newChat}
+            className="btn-primary text-xs py-1 px-3 flex items-center gap-1"
           >
-            <span className="font-body-sm text-sm max-w-[100px] truncate">{chat.title}</span>
-            <button
-              onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-              className="text-on-surface-variant hover:text-error transition-colors"
-              aria-label="Delete chat"
+            <span className="material-symbols-outlined text-sm">add</span>
+            New Chat
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {chats.map((chat) => (
+            <div
+              key={chat.id}
+              className={`flex items-center gap-1 px-3 py-1 rounded-full cursor-pointer transition-colors ${
+                activeChatId === chat.id
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'bg-surface-variant/20 text-on-surface-variant hover:bg-surface-variant/30'
+              }`}
+              onClick={() => setActiveChatId(chat.id)}
             >
-              <span className="material-symbols-outlined text-sm">close</span>
-            </button>
-          </div>
-        ))}
+              <span className="font-body-sm text-sm max-w-[120px] truncate">{chat.title}</span>
+              <button
+                onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
+                className="text-on-surface-variant hover:text-error transition-colors"
+                aria-label="Delete chat"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-[calc(100vh-340px)] md:h-[calc(100vh-360px)]">
+      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-[calc(100vh-380px)] md:h-[calc(100vh-400px)]">
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 custom-scrollbar">
           {messages.map((msg, idx) => (
             <div
