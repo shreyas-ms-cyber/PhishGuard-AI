@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 
 const AIChat = () => {
+  // State
   const [chats, setChats] = useState(() => {
     const saved = localStorage.getItem('ai_chats');
     return saved ? JSON.parse(saved) : [
@@ -26,30 +27,27 @@ const AIChat = () => {
   const currentChat = chats.find(c => c.id === activeChatId) || chats[0];
   const messages = currentChat?.messages || [];
 
+  // Persist
   useEffect(() => {
     localStorage.setItem('ai_chats', JSON.stringify(chats));
     localStorage.setItem('active_chat_id', String(activeChatId));
   }, [chats, activeChatId]);
 
+  // Auto-scroll
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  // Send message
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     const userMsg = input.trim();
     setInput('');
 
+    // Optimistic update
     setChats(prev => prev.map(chat => {
       if (chat.id === activeChatId) {
-        return {
-          ...chat,
-          messages: [...chat.messages, { role: 'user', content: userMsg }]
-        };
+        return { ...chat, messages: [...chat.messages, { role: 'user', content: userMsg }] };
       }
       return chat;
     }));
@@ -60,10 +58,7 @@ const AIChat = () => {
       const reply = response.data.response || 'Sorry, I could not process that.';
       setChats(prev => prev.map(chat => {
         if (chat.id === activeChatId) {
-          return {
-            ...chat,
-            messages: [...chat.messages, { role: 'assistant', content: reply }]
-          };
+          return { ...chat, messages: [...chat.messages, { role: 'assistant', content: reply }] };
         }
         return chat;
       }));
@@ -90,6 +85,7 @@ const AIChat = () => {
     }
   };
 
+  // New chat
   const newChat = () => {
     const newId = Date.now();
     setChats(prev => [...prev, {
@@ -103,6 +99,7 @@ const AIChat = () => {
     setSidebarOpen(false);
   };
 
+  // Delete chat
   const deleteChat = (chatId) => {
     if (chats.length <= 1) {
       setChats([{
@@ -121,6 +118,7 @@ const AIChat = () => {
     }
   };
 
+  // Auto-title
   const updateChatTitle = (chatId, newTitle) => {
     setChats(prev => prev.map(chat => {
       if (chat.id === chatId) {
@@ -144,7 +142,7 @@ const AIChat = () => {
   return (
     <div className="flex flex-col h-full w-full max-w-full pt-4 md:pt-0">
       {/* Mobile header */}
-      <header className="flex items-center justify-between mb-4 md:hidden">
+      <div className="flex items-center justify-between mb-4 md:hidden">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 rounded-lg glass-card text-on-surface hover:text-primary transition-colors"
@@ -158,7 +156,7 @@ const AIChat = () => {
         >
           <span className="material-symbols-outlined">add</span>
         </button>
-      </header>
+      </div>
 
       <div className="flex flex-1 flex-col md:flex-row gap-4 overflow-hidden h-[calc(100vh-260px)] md:h-[calc(100vh-300px)]">
         {/* Sidebar */}
@@ -210,23 +208,18 @@ const AIChat = () => {
 
         {/* Main chat area */}
         <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-full">
-          {/* Header with title and New Chat button */}
+          {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10 flex-shrink-0">
             <h3 className="font-headline-sm text-headline-sm text-on-surface truncate">
               {currentChat?.title || 'New Chat'}
             </h3>
-            <div className="flex items-center gap-3">
-              <span className="font-label-code text-label-code text-on-surface-variant text-xs hidden sm:block">
-                {messages.length} messages
-              </span>
-              <button
-                onClick={newChat}
-                className="btn-primary text-sm py-1.5 px-4 flex items-center gap-1"
-              >
-                <span className="material-symbols-outlined text-sm">add</span>
-                New Chat
-              </button>
-            </div>
+            <button
+              onClick={newChat}
+              className="btn-primary text-sm py-1.5 px-4 flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
+              New Chat
+            </button>
           </div>
 
           {/* Messages */}
