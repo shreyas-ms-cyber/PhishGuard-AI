@@ -17,7 +17,7 @@ const About = () => {
         <p className="font-body-md text-body-md text-on-surface-variant">Meet the developer behind the platform.</p>
       </header>
 
-      {/* Project Description – Only the main paragraph */}
+      {/* Project Description – updated with AI Chatbot */}
       <div className="glass-card p-6 rounded-xl w-full">
         <p className="font-body-lg text-body-lg text-on-surface leading-relaxed">
           <strong>PhishGuard AI</strong> is an intelligent phishing detection platform built for Blue Team analysts, SOC practitioners, and security enthusiasts. 
@@ -26,6 +26,10 @@ const About = () => {
           as <span className="text-secondary font-semibold">Safe</span>, <span className="text-tertiary-container font-semibold">Suspicious</span>, 
           or <span className="text-error font-semibold">High Risk</span>, giving security teams a fast, reliable first line of defense against 
           phishing and social engineering attacks.
+        </p>
+        <p className="font-body-md text-on-surface-variant mt-3">
+          Beyond detection, PhishGuard AI includes a <strong>Gemini‑powered AI Chatbot</strong> that serves as a cybersecurity assistant, 
+          helping users learn about security fundamentals, best practices, and threat awareness in an interactive, educational way.
         </p>
       </div>
 
