@@ -20,7 +20,6 @@ const AIChat = () => {
   });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   const currentChat = chats.find(c => c.id === activeChatId) || chats[0];
@@ -101,12 +100,10 @@ const AIChat = () => {
       ]
     }]);
     setActiveChatId(newId);
-    setSidebarOpen(false);
   };
 
   const deleteChat = (chatId) => {
     if (chats.length <= 1) {
-      // Reset to a single default chat
       setChats([{
         id: Date.now(),
         title: 'New Chat',
@@ -132,7 +129,6 @@ const AIChat = () => {
     }));
   };
 
-  // Auto-title based on first user message
   useEffect(() => {
     const chat = chats.find(c => c.id === activeChatId);
     if (chat && chat.messages.length > 1 && (chat.title === 'New Chat' || chat.title.startsWith('New Chat'))) {
@@ -146,121 +142,93 @@ const AIChat = () => {
 
   return (
     <div className="flex flex-col h-full w-full max-w-full pt-4 md:pt-0">
-      {/* Mobile header with hamburger */}
-      <header className="flex items-center justify-between mb-4 md:hidden">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-lg glass-card text-on-surface hover:text-primary transition-colors"
-        >
-          <span className="material-symbols-outlined">menu</span>
-        </button>
-        <h2 className="font-headline-sm text-headline-sm font-bold text-primary">AI Chat</h2>
+      <header className="flex justify-between items-center mb-4">
+        <div>
+          <h2 className="font-headline-md text-headline-md font-bold text-primary">AI Security Assistant</h2>
+          <p className="font-body-md text-body-md text-on-surface-variant">Ask me about cybersecurity fundamentals, best practices, and threat awareness.</p>
+        </div>
         <button
           onClick={newChat}
-          className="p-2 rounded-lg glass-card text-on-surface hover:text-primary transition-colors"
+          className="btn-primary text-sm"
         >
           <span className="material-symbols-outlined">add</span>
+          New Chat
         </button>
       </header>
 
-      <div className="flex flex-1 flex-col md:flex-row gap-4 overflow-hidden h-[calc(100vh-260px)] md:h-[calc(100vh-300px)]">
-        {/* Chat History Sidebar */}
-        <div
-          className={`fixed md:relative inset-y-0 left-0 z-40 w-64 glass-card rounded-r-xl p-4 overflow-y-auto custom-scrollbar transform transition-transform duration-300 ease-in-out ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } md:translate-x-0 md:flex-shrink-0 md:max-h-full`}
-          style={{ background: 'rgba(13, 19, 34, 0.92)', backdropFilter: 'blur(20px)' }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-headline-sm text-headline-sm text-primary">Chats</h3>
+      {/* Chat History Chips */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {chats.map((chat) => (
+          <div
+            key={chat.id}
+            className={`flex items-center gap-1 px-3 py-1 rounded-full cursor-pointer transition-colors ${
+              activeChatId === chat.id
+                ? 'bg-primary/20 text-primary border border-primary/30'
+                : 'bg-surface-variant/20 text-on-surface-variant hover:bg-surface-variant/30'
+            }`}
+            onClick={() => setActiveChatId(chat.id)}
+          >
+            <span className="font-body-sm text-sm">{chat.title}</span>
             <button
-              onClick={newChat}
-              className="btn-primary text-sm py-1 px-3"
+              onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
+              className="text-on-surface-variant hover:text-error transition-colors"
+              aria-label="Delete chat"
             >
-              <span className="material-symbols-outlined text-sm">add</span>
-              New
+              <span className="material-symbols-outlined text-sm">close</span>
             </button>
           </div>
-          <div className="space-y-1">
-            {chats.map((chat) => (
+        ))}
+      </div>
+
+      {/* Messages Area */}
+      <div className="flex-1 glass-card p-4 md:p-6 rounded-xl flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
               <div
-                key={chat.id}
-                className={`group flex items-center justify-between p-2 rounded-lg cursor-pointer hover:bg-surface-variant/20 transition-colors ${
-                  activeChatId === chat.id ? 'bg-primary/10 border-r-2 border-primary' : ''
+                className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                  msg.role === 'user'
+                    ? 'bg-primary-container text-on-primary-container'
+                    : 'bg-surface-container-highest/50 text-on-surface'
                 }`}
-                onClick={() => { setActiveChatId(chat.id); setSidebarOpen(false); }}
               >
-                <span className="font-body-sm text-sm text-on-surface truncate flex-1">{chat.title}</span>
-                <button
-                  onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-                  className="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-all p-1"
-                  aria-label="Delete chat"
-                >
-                  <span className="material-symbols-outlined text-sm">delete</span>
-                </button>
+                <p className="font-body-md whitespace-pre-wrap break-words">{msg.content}</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="bg-surface-container-highest/50 rounded-2xl px-4 py-3 flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
 
-        {/* Backdrop for mobile sidebar */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 z-30 bg-black/50 md:hidden"
-            onClick={() => setSidebarOpen(false)}
+        {/* Input */}
+        <div className="mt-4 flex gap-3">
+          <textarea
+            rows="1"
+            className="flex-1 bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-3 text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none font-body-md"
+            placeholder="Ask a cybersecurity question..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={loading}
           />
-        )}
-
-        {/* Chat Messages Area */}
-        <div className="flex-1 glass-card p-4 md:p-6 rounded-xl flex flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                    msg.role === 'user'
-                      ? 'bg-primary-container text-on-primary-container'
-                      : 'bg-surface-container-highest/50 text-on-surface'
-                  }`}
-                >
-                  <p className="font-body-md whitespace-pre-wrap break-words">{msg.content}</p>
-                </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-surface-container-highest/50 rounded-2xl px-4 py-3 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                  <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                  <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div className="mt-4 flex gap-3">
-            <textarea
-              rows="1"
-              className="flex-1 bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-3 text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none font-body-md"
-              placeholder="Ask a cybersecurity question..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              disabled={loading}
-            />
-            <button
-              onClick={sendMessage}
-              disabled={!input.trim() || loading}
-              className="btn-primary flex-shrink-0 self-end"
-            >
-              <span className="material-symbols-outlined">send</span>
-            </button>
-          </div>
+          <button
+            onClick={sendMessage}
+            disabled={!input.trim() || loading}
+            className="btn-primary flex-shrink-0 self-end"
+          >
+            <span className="material-symbols-outlined">send</span>
+          </button>
         </div>
       </div>
     </div>
