@@ -17,7 +17,7 @@ const About = () => {
         <p className="font-body-md text-body-md text-on-surface-variant">Meet the developer behind the platform.</p>
       </header>
 
-      {/* Project Description – Updated single paragraph */}
+      {/* Project Description */}
       <div className="glass-card p-6 rounded-xl w-full">
         <p className="font-body-lg text-body-lg text-on-surface leading-relaxed">
           <strong>PhishGuard AI</strong> is an intelligent phishing detection platform built for Blue Team analysts, SOC practitioners, and security enthusiasts. 
@@ -30,24 +30,33 @@ const About = () => {
         </p>
       </div>
 
-      {/* Developer Profile Card – unchanged */}
+      {/* Developer Profile Card – with instant photo display */}
       <div className="glass-card p-6 rounded-xl w-full flex flex-col md:flex-row items-center md:items-start gap-6">
+        {/* Photo – background image for instant visibility */}
         <div className="flex-shrink-0">
-          <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-surface-variant flex items-center justify-center">
-            {!imgError ? (
-              <img
-                src={`/assets/images/profile-photo.jpg?v=${imgVersion}`}
-                alt="Shreyas M S"
-                className="w-full h-full object-cover"
-                onError={() => setImgError(true)}
-                onLoad={() => setImgError(false)}
-              />
-            ) : (
-              <span className="font-display text-4xl md:text-5xl text-primary font-bold">SM</span>
-            )}
+          <div
+            className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-gradient-to-br from-primary/20 to-surface-variant flex items-center justify-center"
+            style={{
+              backgroundImage: `url('/assets/images/profile-photo.jpg?v=${imgVersion}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <img
+              src={`/assets/images/profile-photo.jpg?v=${imgVersion}`}
+              alt="Shreyas M S"
+              className="w-full h-full object-cover opacity-0 transition-opacity duration-500"
+              loading="eager"
+              fetchpriority="high"
+              onError={() => setImgError(true)}
+              onLoad={(e) => {
+                e.target.style.opacity = '1';
+              }}
+            />
           </div>
         </div>
 
+        {/* Info */}
         <div className="flex-1 text-center md:text-left">
           <h3 className="font-headline-md text-headline-md font-bold text-primary">Shreyas M S</h3>
           <p className="font-body-md text-body-md text-secondary font-medium mt-1">
