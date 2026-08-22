@@ -20,6 +20,7 @@ const AIChat = () => {
   });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   const currentChat = chats.find(c => c.id === activeChatId) || chats[0];
@@ -94,28 +95,26 @@ const AIChat = () => {
     const newId = Date.now();
     setChats(prev => [...prev, {
       id: newId,
-      title: `New Chat ${prev.length + 1}`,
+      title: 'New Chat',
       messages: [
         { role: 'assistant', content: 'Hello! I\'m your cybersecurity assistant. Ask me anything about cybersecurity fundamentals, best practices, threat detection, or phishing awareness.' }
       ]
     }]);
     setActiveChatId(newId);
+    setSidebarOpen(false);
   };
 
   const deleteChat = (chatId) => {
     if (chats.length <= 1) {
-      // Don't delete the last chat, just clear messages
-      setChats(prev => prev.map(chat => {
-        if (chat.id === chatId) {
-          return {
-            ...chat,
-            messages: [
-              { role: 'assistant', content: 'Hello! I\'m your cybersecurity assistant. Ask me anything about cybersecurity fundamentals, best practices, threat detection, or phishing awareness.' }
-            ]
-          };
-        }
-        return chat;
-      }));
+      // Reset to a single default chat
+      setChats([{
+        id: Date.now(),
+        title: 'New Chat',
+        messages: [
+          { role: 'assistant', content: 'Hello! I\'m your cybersecurity assistant. Ask me anything about cybersecurity fundamentals, best practices, threat detection, or phishing awareness.' }
+        ]
+      }]);
+      setActiveChatId(Date.now());
       return;
     }
     setChats(prev => prev.filter(chat => chat.id !== chatId));
@@ -133,10 +132,10 @@ const AIChat = () => {
     }));
   };
 
-  // Auto-update chat title based on first user message
+  // Auto-title based on first user message
   useEffect(() => {
     const chat = chats.find(c => c.id === activeChatId);
-    if (chat && chat.messages.length > 1 && chat.title === 'New Chat' || chat.title.startsWith('New Chat')) {
+    if (chat && chat.messages.length > 1 && (chat.title === 'New Chat' || chat.title.startsWith('New Chat'))) {
       const firstUserMsg = chat.messages.find(m => m.role === 'user');
       if (firstUserMsg) {
         const newTitle = firstUserMsg.content.slice(0, 30) + (firstUserMsg.content.length > 30 ? '...' : '');
@@ -147,35 +146,54 @@ const AIChat = () => {
 
   return (
     <div className="flex flex-col h-full w-full max-w-full pt-4 md:pt-0">
-      <header className="flex justify-between items-center mb-4">
-        <div>
-          <h2 className="font-headline-md text-headline-md font-bold text-primary">AI Security Assistant</h2>
-          <p className="font-body-md text-body-md text-on-surface-variant">Ask me about cybersecurity fundamentals, best practices, and threat awareness.</p>
-        </div>
+      {/* Mobile header with hamburger */}
+      <header className="flex items-center justify-between mb-4 md:hidden">
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 rounded-lg glass-card text-on-surface hover:text-primary transition-colors"
+        >
+          <span className="material-symbols-outlined">menu</span>
+        </button>
+        <h2 className="font-headline-sm text-headline-sm font-bold text-primary">AI Chat</h2>
         <button
           onClick={newChat}
-          className="btn-primary text-sm"
+          className="p-2 rounded-lg glass-card text-on-surface hover:text-primary transition-colors"
         >
           <span className="material-symbols-outlined">add</span>
-          New Chat
         </button>
       </header>
 
       <div className="flex flex-1 flex-col md:flex-row gap-4 overflow-hidden h-[calc(100vh-260px)] md:h-[calc(100vh-300px)]">
         {/* Chat History Sidebar */}
-        <div className="w-full md:w-56 flex-shrink-0 glass-card rounded-xl p-3 overflow-y-auto custom-scrollbar max-h-48 md:max-h-full">
-          <h3 className="font-label-code text-label-code text-on-surface-variant uppercase text-xs mb-2">History</h3>
+        <div
+          className={`fixed md:relative inset-y-0 left-0 z-40 w-64 glass-card rounded-r-xl p-4 overflow-y-auto custom-scrollbar transform transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:translate-x-0 md:flex-shrink-0 md:max-h-full`}
+          style={{ background: 'rgba(13, 19, 34, 0.92)', backdropFilter: 'blur(20px)' }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-headline-sm text-headline-sm text-primary">Chats</h3>
+            <button
+              onClick={newChat}
+              className="btn-primary text-sm py-1 px-3"
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
+              New
+            </button>
+          </div>
           <div className="space-y-1">
             {chats.map((chat) => (
               <div
                 key={chat.id}
-                className={`flex items-center justify-between p-2 rounded-lg cursor-pointer hover:bg-surface-variant/20 transition-colors ${activeChatId === chat.id ? 'bg-primary/10 border-r-2 border-primary' : ''}`}
-                onClick={() => setActiveChatId(chat.id)}
+                className={`group flex items-center justify-between p-2 rounded-lg cursor-pointer hover:bg-surface-variant/20 transition-colors ${
+                  activeChatId === chat.id ? 'bg-primary/10 border-r-2 border-primary' : ''
+                }`}
+                onClick={() => { setActiveChatId(chat.id); setSidebarOpen(false); }}
               >
                 <span className="font-body-sm text-sm text-on-surface truncate flex-1">{chat.title}</span>
                 <button
                   onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-                  className="text-on-surface-variant hover:text-error transition-colors p-1"
+                  className="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-all p-1"
                   aria-label="Delete chat"
                 >
                   <span className="material-symbols-outlined text-sm">delete</span>
@@ -185,7 +203,15 @@ const AIChat = () => {
           </div>
         </div>
 
-        {/* Chat Messages */}
+        {/* Backdrop for mobile sidebar */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-black/50 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Chat Messages Area */}
         <div className="flex-1 glass-card p-4 md:p-6 rounded-xl flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
             {messages.map((msg, idx) => (
