@@ -25,18 +25,15 @@ const AIChat = () => {
   const currentChat = chats.find(c => c.id === activeChatId) || chats[0];
   const messages = currentChat?.messages || [];
 
-  // Persist chats
   useEffect(() => {
     localStorage.setItem('ai_chats', JSON.stringify(chats));
     localStorage.setItem('active_chat_id', String(activeChatId));
   }, [chats, activeChatId]);
 
-  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Send message
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     const userMsg = input.trim();
@@ -82,7 +79,6 @@ const AIChat = () => {
     }
   };
 
-  // New chat
   const newChat = () => {
     const newId = Date.now();
     setChats(prev => [...prev, {
@@ -95,7 +91,6 @@ const AIChat = () => {
     setActiveChatId(newId);
   };
 
-  // Delete chat
   const deleteChat = (chatId) => {
     if (chats.length <= 1) {
       setChats([{
@@ -114,7 +109,6 @@ const AIChat = () => {
     }
   };
 
-  // Auto-title
   const updateChatTitle = (chatId, newTitle) => {
     setChats(prev => prev.map(chat => {
       if (chat.id === chatId) {
@@ -155,21 +149,21 @@ const AIChat = () => {
             New Chat
           </button>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="space-y-1">
           {chats.map((chat) => (
             <div
               key={chat.id}
-              className={`flex items-center gap-1 px-3 py-1 rounded-full cursor-pointer transition-colors ${
+              className={`group flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors ${
                 activeChatId === chat.id
-                  ? 'bg-primary/20 text-primary border border-primary/30'
-                  : 'bg-surface-variant/20 text-on-surface-variant hover:bg-surface-variant/30'
+                  ? 'bg-primary/10 border-r-2 border-primary'
+                  : 'hover:bg-surface-variant/20'
               }`}
               onClick={() => setActiveChatId(chat.id)}
             >
-              <span className="font-body-sm text-sm max-w-[120px] truncate">{chat.title}</span>
+              <span className="font-body-sm text-sm text-on-surface truncate flex-1">{chat.title}</span>
               <button
                 onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-                className="text-on-surface-variant hover:text-error transition-colors"
+                className="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-opacity p-1"
                 aria-label="Delete chat"
               >
                 <span className="material-symbols-outlined text-sm">close</span>
@@ -180,7 +174,7 @@ const AIChat = () => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-[calc(100vh-380px)] md:h-[calc(100vh-400px)]">
+      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-[calc(100vh-420px)] md:h-[calc(100vh-440px)]">
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 custom-scrollbar">
           {messages.map((msg, idx) => (
             <div
