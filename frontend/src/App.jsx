@@ -12,6 +12,7 @@ import Support from './components/pages/Support';
 import About from './components/pages/About';
 import Cases from './components/pages/Cases';
 import CaseDetail from './components/pages/CaseDetail';
+import AIChat from './components/pages/AIChat';
 import Layout from './components/layout/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/cases" element={<Cases />} />
           <Route path="/cases/:id" element={<CaseDetail />} />
+          <Route path="/ai-chat" element={<AIChat />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from app.api.v1 import auth, analyze, dashboard, cases, audit
+from app.api.v1 import auth, analyze, dashboard, cases, audit, ai
 from app.config import settings
 from app.database import engine, Base
 
@@ -40,6 +40,7 @@ app.include_router(analyze.router)
 app.include_router(dashboard.router)
 app.include_router(cases.router)
 app.include_router(audit.router)
+app.include_router(ai.router)
 
 @app.get("/")
 async def root():

@@ -137,6 +137,18 @@ const Layout = () => {
               <span className="font-label-code text-label-code">Cases</span>
             </NavLink>
             <NavLink
+              to="/ai-chat"
+              className={({ isActive }) =>
+                `flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-variant/20 hover:text-on-surface transition-colors ${
+                  isActive ? 'text-primary bg-primary/10 border-r-2 border-primary translate-x-1' : ''
+                }`
+              }
+              onClick={closeSidebar}
+            >
+              <span className="material-symbols-outlined">chat</span>
+              <span className="font-label-code text-label-code">AI Chat</span>
+            </NavLink>
+            <NavLink
               to="/about"
               className={({ isActive }) =>
                 `flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-variant/20 hover:text-on-surface transition-colors ${
@@ -160,11 +172,7 @@ const Layout = () => {
               </div>
             </div>
             <nav className="flex flex-col gap-1">
-              <NavLink
-                to="/support"
-                className="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-variant/20 hover:text-on-surface transition-colors"
-                onClick={closeSidebar}
-              >
+              <NavLink to="/support" className="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-variant/20 hover:text-on-surface transition-colors">
                 <span className="material-symbols-outlined">help</span>
                 <span className="font-label-code text-label-code">Support</span>
               </NavLink>
