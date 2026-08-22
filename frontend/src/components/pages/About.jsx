@@ -17,7 +17,7 @@ const About = () => {
         <p className="font-body-md text-body-md text-on-surface-variant">Meet the developer behind the platform.</p>
       </header>
 
-      {/* Project Description – updated with AI Chatbot */}
+      {/* Project Description – Updated single paragraph */}
       <div className="glass-card p-6 rounded-xl w-full">
         <p className="font-body-lg text-body-lg text-on-surface leading-relaxed">
           <strong>PhishGuard AI</strong> is an intelligent phishing detection platform built for Blue Team analysts, SOC practitioners, and security enthusiasts. 
@@ -25,11 +25,8 @@ const About = () => {
           to inspect suspicious emails in real time. The platform performs deep inspection of email headers, body content, and links to classify threats 
           as <span className="text-secondary font-semibold">Safe</span>, <span className="text-tertiary-container font-semibold">Suspicious</span>, 
           or <span className="text-error font-semibold">High Risk</span>, giving security teams a fast, reliable first line of defense against 
-          phishing and social engineering attacks.
-        </p>
-        <p className="font-body-md text-on-surface-variant mt-3">
-          Beyond detection, PhishGuard AI includes a <strong>Gemini‑powered AI Chatbot</strong> that serves as a cybersecurity assistant, 
-          helping users learn about security fundamentals, best practices, and threat awareness in an interactive, educational way.
+          phishing and social engineering attacks. It also features a <strong>Gemini‑powered AI Chatbot</strong> that serves as an interactive 
+          cybersecurity assistant, helping users learn about security fundamentals, best practices, and threat awareness.
         </p>
       </div>
 
