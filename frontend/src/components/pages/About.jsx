@@ -32,12 +32,12 @@ const About = () => {
 
       {/* Developer Profile Card – with instant photo display */}
       <div className="glass-card p-6 rounded-xl w-full flex flex-col md:flex-row items-center md:items-start gap-6">
-        {/* Photo – background image for instant visibility */}
+        {/* Photo – background image for instant visibility (static URL, preloaded) */}
         <div className="flex-shrink-0">
           <div
             className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.3)] bg-gradient-to-br from-primary/20 to-surface-variant flex items-center justify-center"
             style={{
-              backgroundImage: `url('/assets/images/profile-photo.jpg?v=${imgVersion}')`,
+              backgroundImage: `url('/assets/images/profile-photo.jpg')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
