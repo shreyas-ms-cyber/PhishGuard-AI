@@ -17,7 +17,7 @@ const About = () => {
         <p className="font-body-md text-body-md text-on-surface-variant">Meet the developer behind the platform.</p>
       </header>
 
-      {/* Project Description – Updated */}
+      {/* Project Description – Only the main paragraph */}
       <div className="glass-card p-6 rounded-xl w-full">
         <p className="font-body-lg text-body-lg text-on-surface leading-relaxed">
           <strong>PhishGuard AI</strong> is an intelligent phishing detection platform built for Blue Team analysts, SOC practitioners, and security enthusiasts. 
@@ -26,24 +26,6 @@ const About = () => {
           as <span className="text-secondary font-semibold">Safe</span>, <span className="text-tertiary-container font-semibold">Suspicious</span>, 
           or <span className="text-error font-semibold">High Risk</span>, giving security teams a fast, reliable first line of defense against 
           phishing and social engineering attacks.
-        </p>
-        <p className="font-body-md text-on-surface-variant mt-4">
-          <strong>Beyond detection, PhishGuard AI provides a full SOC investigation workflow:</strong>
-        </p>
-        <ul className="list-disc list-inside text-on-surface-variant font-body-md space-y-1 mt-2">
-          <li><strong>IOC Extraction</strong> – URLs, domains, IPv4, email addresses, and file hashes.</li>
-          <li><strong>Email Header Analysis</strong> – SPF, DKIM, DMARC, and sender spoofing detection.</li>
-          <li><strong>MITRE ATT&CK Mapping</strong> – automatically maps findings to techniques like T1566 and T1589.</li>
-          <li><strong>Explainable Risk Scoring</strong> – per‑rule point contributions with detailed evidence.</li>
-          <li><strong>Case Management</strong> – track investigations with severity, status, and linked analyses.</li>
-          <li><strong>Analyst Notes & Feedback</strong> – record findings and mark detections as false positives.</li>
-          <li><strong>Audit Logging</strong> – all key actions logged for accountability and transparency.</li>
-          <li><strong>AI Chatbot</strong> – Gemini‑powered cybersecurity assistant for education and Q&A.</li>
-          <li><strong>Reports & Dashboard</strong> – PDF/CSV export and real‑time SOC analytics with charts.</li>
-        </ul>
-        <p className="font-body-md text-on-surface-variant mt-4">
-          <strong>Tech stack:</strong> React 18, FastAPI, PostgreSQL, JWT authentication, and secure HTTP‑only cookies. 
-          Deployed on Vercel (frontend), Render (backend), and Neon (database – free, never expires).
         </p>
       </div>
 
