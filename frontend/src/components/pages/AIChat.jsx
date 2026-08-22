@@ -155,15 +155,15 @@ const AIChat = () => {
               key={chat.id}
               className={`group flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors ${
                 activeChatId === chat.id
-                  ? 'bg-primary/10 border-r-2 border-primary'
-                  : 'hover:bg-surface-variant/20'
+                  ? 'bg-primary/10 border-l-2 border-primary'
+                  : 'hover:bg-surface-variant/10'
               }`}
               onClick={() => setActiveChatId(chat.id)}
             >
               <span className="font-body-sm text-sm text-on-surface truncate flex-1">{chat.title}</span>
               <button
                 onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-                className="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-opacity p-1"
+                className="text-on-surface-variant hover:text-error transition-colors p-1"
                 aria-label="Delete chat"
               >
                 <span className="material-symbols-outlined text-sm">close</span>
@@ -174,7 +174,7 @@ const AIChat = () => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-[calc(100vh-420px)] md:h-[calc(100vh-440px)]">
+      <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 custom-scrollbar">
           {messages.map((msg, idx) => (
             <div
