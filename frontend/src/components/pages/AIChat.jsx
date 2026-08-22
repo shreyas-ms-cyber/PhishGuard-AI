@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 
 const AIChat = () => {
-  // Load chats from localStorage or create default
   const [chats, setChats] = useState(() => {
     const saved = localStorage.getItem('ai_chats');
     return saved ? JSON.parse(saved) : [
@@ -27,13 +26,11 @@ const AIChat = () => {
   const currentChat = chats.find(c => c.id === activeChatId) || chats[0];
   const messages = currentChat?.messages || [];
 
-  // Persist to localStorage
   useEffect(() => {
     localStorage.setItem('ai_chats', JSON.stringify(chats));
     localStorage.setItem('active_chat_id', String(activeChatId));
   }, [chats, activeChatId]);
 
-  // Auto-scroll to bottom
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -42,13 +39,11 @@ const AIChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Send message to backend
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     const userMsg = input.trim();
     setInput('');
 
-    // Add user message optimistically
     setChats(prev => prev.map(chat => {
       if (chat.id === activeChatId) {
         return {
@@ -95,7 +90,6 @@ const AIChat = () => {
     }
   };
 
-  // Create a new chat
   const newChat = () => {
     const newId = Date.now();
     setChats(prev => [...prev, {
@@ -109,10 +103,8 @@ const AIChat = () => {
     setSidebarOpen(false);
   };
 
-  // Delete a chat
   const deleteChat = (chatId) => {
     if (chats.length <= 1) {
-      // Reset to a single default chat
       setChats([{
         id: Date.now(),
         title: 'New Chat',
@@ -129,7 +121,6 @@ const AIChat = () => {
     }
   };
 
-  // Auto-update chat title based on first user message
   const updateChatTitle = (chatId, newTitle) => {
     setChats(prev => prev.map(chat => {
       if (chat.id === chatId) {
@@ -152,7 +143,7 @@ const AIChat = () => {
 
   return (
     <div className="flex flex-col h-full w-full max-w-full pt-4 md:pt-0">
-      {/* Mobile header with hamburger */}
+      {/* Mobile header */}
       <header className="flex items-center justify-between mb-4 md:hidden">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -218,19 +209,28 @@ const AIChat = () => {
         )}
 
         {/* Main chat area */}
-        <div className="flex-1 glass-card p-4 md:p-6 rounded-xl flex flex-col overflow-hidden">
-          {/* Chat title */}
-          <div className="flex items-center justify-between mb-3 pb-2 border-b border-outline-variant/10">
+        <div className="flex-1 glass-card rounded-xl flex flex-col overflow-hidden h-full">
+          {/* Header with title and New Chat button */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10 flex-shrink-0">
             <h3 className="font-headline-sm text-headline-sm text-on-surface truncate">
               {currentChat?.title || 'New Chat'}
             </h3>
-            <span className="font-label-code text-label-code text-on-surface-variant text-xs">
-              {messages.length} messages
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="font-label-code text-label-code text-on-surface-variant text-xs hidden sm:block">
+                {messages.length} messages
+              </span>
+              <button
+                onClick={newChat}
+                className="btn-primary text-sm py-1.5 px-4 flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-sm">add</span>
+                New Chat
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 custom-scrollbar">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -260,23 +260,25 @@ const AIChat = () => {
           </div>
 
           {/* Input */}
-          <div className="mt-4 flex gap-3">
-            <textarea
-              rows="1"
-              className="flex-1 bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-3 text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none font-body-md"
-              placeholder="Ask a cybersecurity question..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              disabled={loading}
-            />
-            <button
-              onClick={sendMessage}
-              disabled={!input.trim() || loading}
-              className="btn-primary flex-shrink-0 self-end"
-            >
-              <span className="material-symbols-outlined">send</span>
-            </button>
+          <div className="p-4 border-t border-outline-variant/10 flex-shrink-0">
+            <div className="flex gap-3">
+              <textarea
+                rows="1"
+                className="flex-1 bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-3 text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none font-body-md"
+                placeholder="Ask a cybersecurity question..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={loading}
+              />
+              <button
+                onClick={sendMessage}
+                disabled={!input.trim() || loading}
+                className="btn-primary flex-shrink-0 self-end"
+              >
+                <span className="material-symbols-outlined">send</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
