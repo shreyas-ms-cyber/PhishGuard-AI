@@ -163,10 +163,10 @@ const AIChat = () => {
               <span className="font-body-sm text-sm text-on-surface truncate flex-1">{chat.title}</span>
               <button
                 onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-                className="text-on-surface-variant hover:text-error transition-colors p-1"
+                className="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-opacity p-1 text-sm"
                 aria-label="Delete chat"
               >
-                <span className="text-sm font-bold">×</span>
+                ×
               </button>
             </div>
           ))}
