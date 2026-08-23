@@ -10,14 +10,13 @@ interface ChatInputProps {
 export default function ChatInput({ 
   onSend, 
   disabled = false, 
-  placeholder = "Type a message..." 
+  placeholder = "Ask me anything about cybersecurity..." 
 }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const [isComposing, setIsComposing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const isSendingRef = useRef(false);
 
-  // Auto-focus the input on mount
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -25,20 +24,17 @@ export default function ChatInput({
   }, []);
 
   const handleSend = () => {
-    // Prevent double sends
-    if (isSendingRef.current || disabled || !message.trim()) {
-      return;
-    }
-
+    if (isSendingRef.current || disabled || !message.trim()) return;
+    
     isSendingRef.current = true;
     onSend(message.trim());
     setMessage('');
-    isSendingRef.current = false;
-
-    // Keep focus after sending
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    setTimeout(() => {
+      isSendingRef.current = false;
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 100);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -49,7 +45,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="flex items-center gap-2 p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+    <div className="flex items-center gap-2 p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
       <input
         ref={inputRef}
         type="text"
@@ -61,45 +57,48 @@ export default function ChatInput({
         placeholder={placeholder}
         disabled={disabled}
         className="
-          flex-1 min-w-[50px] 
-          px-4 py-2.5 
+          flex-1 
+          min-w-[60px] 
+          px-4 py-3 
           bg-gray-50 dark:bg-gray-700 
           border border-gray-200 dark:border-gray-600 
-          rounded-lg 
+          rounded-xl 
           text-gray-900 dark:text-white 
           placeholder-gray-500 dark:placeholder-gray-400
+          text-base
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-all duration-200
         "
         style={{
-          // Ensure input takes all available space
-          width: '100%',
+          width: 'auto',
           flex: '1 1 auto',
-          minWidth: '50px'
+          minWidth: '60px',
+          height: '48px'
         }}
       />
       <button
         onClick={handleSend}
         disabled={disabled || !message.trim()}
         className="
-          flex-shrink-0 
-          px-4 py-2.5 
+          flex-shrink-0
+          px-6 py-3 
           bg-blue-600 hover:bg-blue-700 
           disabled:bg-blue-400 disabled:cursor-not-allowed
-          text-white 
-          rounded-lg 
-          transition-colors duration-200
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+          active:scale-95
+          text-white font-medium
+          rounded-xl 
+          transition-all duration-200
           flex items-center justify-center
+          gap-2
+          min-w-[80px]
         "
         style={{
-          width: 'auto',
-          minWidth: '60px'
+          height: '48px'
         }}
       >
-        <Send className="w-5 h-5" />
-        <span className="hidden sm:inline ml-2">Send</span>
+        <Send className="w-4 h-4" />
+        <span>Send</span>
       </button>
     </div>
   );

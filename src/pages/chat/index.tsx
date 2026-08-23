@@ -21,22 +21,27 @@ export default function AIChatPage() {
   const [activeSessionId, setActiveSessionId] = useState('1');
   const [isCreating, setIsCreating] = useState(false);
   const createTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastClickTimeRef = useRef<number>(0);
 
-  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
-
-  // Prevent duplicate chat creation with debouncing and guard
+  // PREVENT DUPLICATE CHAT CREATION
   const createNewChat = useCallback(() => {
-    // Guard against rapid multiple clicks
+    const now = Date.now();
+    
+    // Prevent double clicks within 500ms
+    if (now - lastClickTimeRef.current < 500) {
+      return;
+    }
+    lastClickTimeRef.current = now;
+
+    // Prevent if already creating
     if (isCreating) return;
     
-    // Clear any pending creation timeout
     if (createTimeoutRef.current) {
       clearTimeout(createTimeoutRef.current);
     }
 
     setIsCreating(true);
 
-    // Use a small delay to prevent double clicks from creating multiple chats
     createTimeoutRef.current = setTimeout(() => {
       const newSession: ChatSession = {
         id: `chat-${Date.now()}`,
@@ -46,10 +51,12 @@ export default function AIChatPage() {
       };
 
       setSessions(prev => {
-        // Double-check if we already have a session with the same name
+        // Check if we already have a session with same name
         const exists = prev.some(s => s.name === newSession.name);
         if (exists) {
-          return prev;
+          // If exists, create with unique name
+          const uniqueName = `New Chat ${prev.length + 1}`;
+          return [...prev, { ...newSession, name: uniqueName }];
         }
         return [...prev, newSession];
       });
@@ -61,11 +68,8 @@ export default function AIChatPage() {
   }, [sessions.length, isCreating]);
 
   const deleteChat = useCallback((id: string) => {
-    if (sessions.length <= 1) {
-      // Don't delete the last chat
-      return;
-    }
-
+    if (sessions.length <= 1) return;
+    
     setSessions(prev => prev.filter(s => s.id !== id));
     if (activeSessionId === id) {
       const remaining = sessions.filter(s => s.id !== id);
@@ -79,20 +83,18 @@ export default function AIChatPage() {
     if (!activeSession) return;
 
     // Add user message
-    const updatedSessions = sessions.map(session => {
+    setSessions(prev => prev.map(session => {
       if (session.id === activeSessionId) {
         return {
           ...session,
           messages: [
             ...session.messages,
-            { role: 'user', content: message }
+            { role: 'user' as const, content: message }
           ]
         };
       }
       return session;
-    });
-
-    setSessions(updatedSessions);
+    }));
 
     // Simulate AI response
     setTimeout(() => {
@@ -102,49 +104,52 @@ export default function AIChatPage() {
             ...session,
             messages: [
               ...session.messages,
-              { role: 'assistant', content: 'This is a simulated AI response.' }
+              { role: 'assistant' as const, content: "I'm analyzing your request. Let me help you with that!" }
             ]
           };
         }
         return session;
       }));
     }, 1000);
-  }, [activeSession, activeSessionId, sessions]);
+  }, [activeSession, activeSessionId]);
+
+  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Chat header with session management */}
+    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900">
+      {/* Chat Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <div className="flex items-center space-x-4 overflow-x-auto">
+        <div className="flex items-center gap-3 overflow-x-auto flex-1">
           <button
             onClick={createNewChat}
             disabled={isCreating}
             className="
               flex-shrink-0
-              px-3 py-1.5 
+              px-4 py-2 
               bg-blue-600 hover:bg-blue-700 
               disabled:bg-blue-400 disabled:cursor-not-allowed
               text-white text-sm font-medium 
               rounded-lg 
-              transition-colors duration-200
-              flex items-center space-x-1
+              transition-all duration-200
+              flex items-center gap-2
             "
           >
             <Plus className="w-4 h-4" />
-            <span>New Chat</span>
+            New Chat
           </button>
 
-          {/* Session tabs - only show existing sessions, no duplicates */}
-          <div className="flex items-center space-x-2">
+          {/* Session Tabs - ONE PER SESSION, NO DUPLICATES */}
+          <div className="flex items-center gap-2 overflow-x-auto">
             {sessions.map((session) => (
               <div
                 key={session.id}
                 className={`
-                  flex items-center space-x-1 
+                  flex items-center gap-1.5 
                   px-3 py-1.5 
                   rounded-lg 
-                  transition-colors duration-200
+                  transition-all duration-200
                   cursor-pointer
+                  whitespace-nowrap
                   ${session.id === activeSessionId
                     ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
                     : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
@@ -152,15 +157,15 @@ export default function AIChatPage() {
                 `}
                 onClick={() => setActiveSessionId(session.id)}
               >
-                <MessageSquare className="w-4 h-4" />
-                <span className="text-sm truncate max-w-[100px]">{session.name}</span>
+                <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="text-sm">{session.name}</span>
                 {sessions.length > 1 && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       deleteChat(session.id);
                     }}
-                    className="ml-1 p-0.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+                    className="ml-0.5 p-0.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -171,16 +176,20 @@ export default function AIChatPage() {
         </div>
       </div>
 
-      {/* Chat messages area */}
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900">
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto p-4">
         {activeSession?.messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400">
-                Welcome to AI Chat
+            <div className="text-center max-w-md">
+              <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                <MessageSquare className="w-8 h-8 text-blue-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                Hello! I'm your cybersecurity assistant.
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-500">
-                Start a conversation by typing a message below.
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                Ask me anything about cybersecurity fundamentals, best practices, 
+                threat detection, or phishing awareness.
               </p>
             </div>
           </div>
@@ -190,7 +199,7 @@ export default function AIChatPage() {
               <div
                 key={idx}
                 className={`
-                  p-3 rounded-lg max-w-[80%]
+                  p-3 rounded-xl max-w-[80%]
                   ${msg.role === 'user'
                     ? 'ml-auto bg-blue-600 text-white'
                     : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
@@ -204,12 +213,12 @@ export default function AIChatPage() {
         )}
       </div>
 
-      {/* Chat input - fixed at bottom with proper sizing */}
-      <div className="flex-shrink-0">
+      {/* Chat Input - FULL WIDTH with keyboard support */}
+      <div className="flex-shrink-0 bg-white dark:bg-gray-800">
         <ChatInput 
           onSend={handleSendMessage}
           disabled={!activeSession}
-          placeholder="Type a message..."
+          placeholder="Ask me anything about cybersecurity..."
         />
       </div>
     </div>

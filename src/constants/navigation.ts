@@ -1,65 +1,69 @@
 /**
- * Single source of truth for navigation items
- * This ensures consistent rendering across all components
+ * SINGLE SOURCE OF TRUTH - DO NOT DUPLICATE
+ * All navigation items must be defined here and only here
  */
 export const NAV_ITEMS = [
+  // DETECTION Section
   { 
     id: 'dashboard',
     label: 'Dashboard', 
     href: '/dashboard', 
     icon: 'LayoutDashboard',
-    description: 'Overview dashboard'
+    section: 'DETECTION'
   },
   { 
     id: 'analyze',
     label: 'Analyze Email', 
     href: '/analyze', 
     icon: 'Mail',
-    description: 'Email analysis tool'
+    section: 'DETECTION'
   },
   { 
     id: 'history',
     label: 'History', 
     href: '/history', 
     icon: 'Clock',
-    description: 'Analysis history'
+    section: 'DETECTION'
   },
+  
+  // INTELLIGENCE Section
   { 
     id: 'reports',
     label: 'Reports', 
     href: '/reports', 
     icon: 'BarChart3',
-    description: 'Generated reports'
+    section: 'INTELLIGENCE'
   },
   { 
     id: 'cases',
     label: 'Cases', 
     href: '/cases', 
     icon: 'Folder',
-    description: 'Case management'
+    section: 'INTELLIGENCE'
   },
   { 
     id: 'chat',
     label: 'AI Chat', 
     href: '/chat', 
     icon: 'MessageCircle',
-    description: 'AI-powered chat assistant'
+    section: 'INTELLIGENCE'
   },
+  
+  // SYSTEM Section - INCLUDES ABOUT
   { 
     id: 'settings',
     label: 'Settings', 
     href: '/settings', 
     icon: 'Settings',
-    description: 'Application settings'
+    section: 'SYSTEM'
   },
   { 
-    id: 'about',
+    id: 'about',  // ← THIS MUST ALWAYS BE HERE
     label: 'About', 
     href: '/about', 
     icon: 'Info',
-    description: 'About PhishGuard AI'
+    section: 'SYSTEM'
   },
 ] as const;
 
 export type NavItem = typeof NAV_ITEMS[number];
-export type NavItemId = NavItem['id'];
