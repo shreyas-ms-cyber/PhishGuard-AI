@@ -300,11 +300,12 @@ const Dashboard = () => {
     }],
   };
 
+  // Stat cards with accent colors
   const statCards = [
-    { key: 'total', label: 'Total Analyzed', value: stats.total, icon: 'analytics', color: 'text-primary' },
-    { key: 'safe', label: 'Safe', value: stats.safe, icon: 'check_circle', color: 'text-status-safe' },
-    { key: 'suspicious', label: 'Suspicious', value: stats.suspicious, icon: 'warning', color: 'text-status-suspicious' },
-    { key: 'high_risk', label: 'High Risk', value: stats.high_risk, icon: 'error', color: 'text-status-high-risk' },
+    { key: 'total', label: 'Total Analyzed', value: stats.total, icon: 'analytics', color: 'text-primary', borderColor: 'border-primary/30' },
+    { key: 'safe', label: 'Safe', value: stats.safe, icon: 'check_circle', color: 'text-status-safe', borderColor: 'border-status-safe/30' },
+    { key: 'suspicious', label: 'Suspicious', value: stats.suspicious, icon: 'warning', color: 'text-status-suspicious', borderColor: 'border-status-suspicious/30' },
+    { key: 'high_risk', label: 'High Risk', value: stats.high_risk, icon: 'error', color: 'text-status-high-risk', borderColor: 'border-status-high-risk/30' },
   ];
 
   return (
@@ -327,7 +328,10 @@ const Dashboard = () => {
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((card) => (
-          <div key={card.key} className="glass-card p-4 rounded-xl hover:translate-y-[-2px] border-t-2 transition-all duration-200">
+          <div 
+            key={card.key} 
+            className={`glass-card p-4 rounded-xl hover:translate-y-[-2px] transition-all duration-200 border-t-2 ${card.borderColor}`}
+          >
             <div className="flex items-center gap-3">
               <div className={`p-2.5 rounded-lg ${card.color.replace('text', 'bg')}/10`}>
                 <span className={`material-symbols-outlined ${card.color}`}>{card.icon}</span>
