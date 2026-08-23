@@ -26,10 +26,6 @@ const Support = () => {
       a: 'Currently, only plain text (.txt) files are supported for upload. The maximum file size is 500 KB. Other file types are rejected to maintain security.'
     },
     {
-      q: 'What is the maximum TXT upload size?',
-      a: 'The maximum allowed file size is 500 KB. This ensures fast analysis and prevents abuse.'
-    },
-    {
       q: 'Is this system machine-learning based?',
       a: 'No, PhishGuard AI does not use machine learning or neural networks. It employs heuristic-based detection using rule-based analysis, regular expressions, suspicious keywords, URL analysis, urgency detection, and credential-request detection. This approach is transparent, explainable, and does not require training on large datasets.'
     }
@@ -40,29 +36,30 @@ const Support = () => {
   };
 
   return (
-    <div className="space-y-4 pt-4 md:pt-0 w-full max-w-full">
-      <header>
-        <h2 className="font-headline-md text-headline-md font-bold text-primary">Support Center</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant">Find answers and get help.</p>
-      </header>
+    <div className="space-y-6 pt-4 md:pt-0 w-full max-w-full">
+      {/* Page Header */}
+      <div>
+        <h1 className="font-display text-2xl font-bold text-on-surface">Support Center</h1>
+        <p className="text-muted text-sm">Find answers and get help.</p>
+      </div>
 
       {/* FAQ */}
-      <div className="glass-card p-6 rounded-xl w-full">
-        <h3 className="font-headline-sm text-headline-sm text-primary mb-4">Frequently Asked Questions</h3>
+      <div className="glass-card p-6 rounded-xl">
+        <h3 className="font-display text-sm font-semibold text-on-surface mb-4">Frequently Asked Questions</h3>
         <div className="space-y-2">
           {faqs.map((faq, index) => (
-            <div key={index} className="border-b border-outline-variant/10 last:border-0">
+            <div key={index} className="border-b border-glass-border last:border-0">
               <button
                 onClick={() => toggleFaq(index)}
                 className="w-full text-left py-3 flex justify-between items-center hover:text-primary transition-colors"
               >
-                <span className="font-body-md font-medium text-on-surface">{faq.q}</span>
-                <span className="material-symbols-outlined text-on-surface-variant">
+                <span className="text-sm font-medium text-on-surface">{faq.q}</span>
+                <span className="material-symbols-outlined text-muted">
                   {openFaq === index ? 'expand_less' : 'expand_more'}
                 </span>
               </button>
               {openFaq === index && (
-                <div className="pb-3 text-on-surface-variant font-body-sm leading-relaxed">
+                <div className="pb-3 text-sm text-muted leading-relaxed">
                   {faq.a}
                 </div>
               )}
@@ -72,44 +69,44 @@ const Support = () => {
       </div>
 
       {/* System Information */}
-      <div className="glass-card p-6 rounded-xl w-full">
-        <h3 className="font-headline-sm text-headline-sm text-primary mb-4">System Information</h3>
+      <div className="glass-card p-6 rounded-xl">
+        <h3 className="font-display text-sm font-semibold text-on-surface mb-4">System Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">Application Status</p>
-            <p className="font-body-md text-secondary flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+          <div>
+            <p className="font-label-code text-[10px] text-muted uppercase tracking-wider">Status</p>
+            <p className="text-sm text-status-safe flex items-center gap-2 mt-1">
+              <span className="w-2 h-2 rounded-full bg-status-safe animate-pulse" />
               Operational
             </p>
           </div>
-          <div className="space-y-1">
-            <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">Detection Engine</p>
-            <p className="font-body-md text-on-surface">Heuristic-based</p>
+          <div>
+            <p className="font-label-code text-[10px] text-muted uppercase tracking-wider">Detection Engine</p>
+            <p className="text-sm text-on-surface mt-1">Heuristic-based</p>
           </div>
-          <div className="space-y-1">
-            <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">Supported Upload</p>
-            <p className="font-body-md text-on-surface">TXT (max 500 KB)</p>
+          <div>
+            <p className="font-label-code text-[10px] text-muted uppercase tracking-wider">Supported Upload</p>
+            <p className="text-sm text-on-surface mt-1">TXT (max 500 KB)</p>
           </div>
-          <div className="space-y-1">
-            <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">Version</p>
-            <p className="font-body-md text-on-surface">1.0.0</p>
+          <div>
+            <p className="font-label-code text-[10px] text-muted uppercase tracking-wider">Version</p>
+            <p className="text-sm text-on-surface mt-1">1.0.0</p>
           </div>
         </div>
       </div>
 
       {/* Quick Links */}
-      <div className="glass-card p-6 rounded-xl w-full">
-        <h3 className="font-headline-sm text-headline-sm text-primary mb-4">Quick Help</h3>
-        <div className="flex flex-wrap gap-4">
-          <Link to="/analyze" className="btn-secondary">
+      <div className="glass-card p-6 rounded-xl">
+        <h3 className="font-display text-sm font-semibold text-on-surface mb-4">Quick Help</h3>
+        <div className="flex flex-wrap gap-3">
+          <Link to="/analyze" className="btn-secondary text-sm">
             <span className="material-symbols-outlined">mail_lock</span>
             Analyze Email
           </Link>
-          <Link to="/history" className="btn-secondary">
+          <Link to="/history" className="btn-secondary text-sm">
             <span className="material-symbols-outlined">history</span>
             History
           </Link>
-          <Link to="/reports" className="btn-secondary">
+          <Link to="/reports" className="btn-secondary text-sm">
             <span className="material-symbols-outlined">assessment</span>
             Reports
           </Link>

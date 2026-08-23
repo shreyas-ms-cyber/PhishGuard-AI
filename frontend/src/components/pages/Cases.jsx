@@ -46,40 +46,44 @@ const Cases = () => {
   };
 
   const getSeverityBadge = (severity) => {
-    const colors = {
-      'Low': 'bg-secondary/10 text-secondary border-secondary/20',
-      'Medium': 'bg-tertiary-container/10 text-tertiary-container border-tertiary-container/20',
-      'High': 'bg-error/10 text-error border-error/20',
-      'Critical': 'bg-error/10 text-error border-error/20'
+    const classes = {
+      'Low': 'bg-status-safe/10 text-status-safe border-status-safe/20',
+      'Medium': 'bg-status-suspicious/10 text-status-suspicious border-status-suspicious/20',
+      'High': 'bg-status-high-risk/10 text-status-high-risk border-status-high-risk/20',
+      'Critical': 'bg-status-high-risk/20 text-status-high-risk border-status-high-risk/30',
     };
-    return colors[severity] || colors['Medium'];
+    return classes[severity] || classes['Medium'];
   };
 
   const getStatusBadge = (status) => {
-    const colors = {
+    const classes = {
       'Open': 'bg-primary/10 text-primary border-primary/20',
-      'Investigating': 'bg-tertiary-container/10 text-tertiary-container border-tertiary-container/20',
-      'Contained': 'bg-secondary/10 text-secondary border-secondary/20',
-      'Resolved': 'bg-secondary/10 text-secondary border-secondary/20',
-      'Closed': 'bg-surface-variant/50 text-on-surface-variant border-outline-variant/20'
+      'Investigating': 'bg-status-suspicious/10 text-status-suspicious border-status-suspicious/20',
+      'Contained': 'bg-status-safe/10 text-status-safe border-status-safe/20',
+      'Resolved': 'bg-status-safe/20 text-status-safe border-status-safe/30',
+      'Closed': 'bg-muted/10 text-muted border-muted/20',
     };
-    return colors[status] || colors['Open'];
+    return classes[status] || classes['Open'];
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-primary animate-pulse">Loading cases...</div>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <p className="text-muted text-sm">Loading cases...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 pt-4 md:pt-0 w-full max-w-full">
-      <header className="flex justify-between items-center">
+    <div className="space-y-6 pt-4 md:pt-0 w-full max-w-full">
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="font-headline-md text-headline-md font-bold text-primary">Investigations</h2>
-          <p className="font-body-md text-body-md text-on-surface-variant">Manage your investigation cases.</p>
+          <h1 className="font-display text-2xl font-bold text-on-surface">Investigations</h1>
+          <p className="text-muted text-sm">Manage your investigation cases.</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
@@ -88,68 +92,94 @@ const Cases = () => {
           <span className="material-symbols-outlined">add</span>
           New Case
         </button>
-      </header>
+      </div>
 
+      {/* Create Case Modal */}
       {showCreate && (
-        <div className="glass-card p-6 rounded-xl w-full">
-          <h3 className="font-headline-sm text-headline-sm text-primary mb-4">Create New Case</h3>
-          <div className="space-y-3">
-            <input
-              type="text"
-              placeholder="Case Title"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              className="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-2 text-sm text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50"
-            />
-            <textarea
-              placeholder="Description (optional)"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              className="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-2 text-sm text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50 resize-none h-24"
-            />
-            <select
-              value={newSeverity}
-              onChange={(e) => setNewSeverity(e.target.value)}
-              className="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-2 text-sm text-on-surface focus:outline-none focus:border-primary/50"
-            >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-              <option value="Critical">Critical</option>
-            </select>
-            <div className="flex gap-3">
-              <button onClick={createCase} className="btn-primary">Create</button>
-              <button onClick={() => setShowCreate(false)} className="btn-secondary">Cancel</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="glass-card p-6 rounded-xl w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-display text-lg font-semibold text-on-surface">Create New Case</h3>
+              <button
+                onClick={() => setShowCreate(false)}
+                className="text-muted hover:text-on-surface transition-colors"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="font-label-code text-[10px] text-muted uppercase tracking-wider block mb-1.5">Case Title</label>
+                <input
+                  type="text"
+                  placeholder="Enter case title..."
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  className="w-full bg-input border border-glass-border rounded-lg p-2.5 text-sm text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                />
+              </div>
+              <div>
+                <label className="font-label-code text-[10px] text-muted uppercase tracking-wider block mb-1.5">Description</label>
+                <textarea
+                  placeholder="Describe the case (optional)..."
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  className="w-full bg-input border border-glass-border rounded-lg p-2.5 text-sm text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all resize-none h-24"
+                />
+              </div>
+              <div>
+                <label className="font-label-code text-[10px] text-muted uppercase tracking-wider block mb-1.5">Severity</label>
+                <select
+                  value={newSeverity}
+                  onChange={(e) => setNewSeverity(e.target.value)}
+                  className="w-full bg-input border border-glass-border rounded-lg p-2.5 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                >
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Critical">Critical</option>
+                </select>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button onClick={createCase} className="btn-primary flex-1 justify-center">Create</button>
+                <button onClick={() => setShowCreate(false)} className="btn-secondary flex-1 justify-center">Cancel</button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* Cases List */}
       {cases.length === 0 ? (
-        <div className="glass-card p-12 text-center text-on-surface-variant">
-          <span className="material-symbols-outlined text-5xl block mb-4 opacity-30">description</span>
-          <p>No cases yet. Start an investigation by creating a case.</p>
+        <div className="glass-card p-12 text-center">
+          <span className="material-symbols-outlined text-5xl text-muted/30 block mb-4">description</span>
+          <p className="text-on-surface/60 font-medium">No cases yet</p>
+          <p className="text-muted text-sm mt-1">Start an investigation by creating a case.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {cases.map((caseItem) => (
-            <div key={caseItem.id} className="glass-card p-4 rounded-xl w-full hover:border-primary/30 transition-colors cursor-pointer" onClick={() => navigate(`/cases/${caseItem.id}`)}>
+            <div
+              key={caseItem.id}
+              className="glass-card p-5 rounded-xl hover:translate-y-[-2px] transition-all duration-200 cursor-pointer"
+              onClick={() => navigate(`/cases/${caseItem.id}`)}
+            >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface">{caseItem.title}</h3>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase border ${getSeverityBadge(caseItem.severity)}`}>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h3 className="font-display text-base font-semibold text-on-surface truncate">{caseItem.title}</h3>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase border ${getSeverityBadge(caseItem.severity)}`}>
                       {caseItem.severity}
                     </span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase border ${getStatusBadge(caseItem.status)}`}>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase border ${getStatusBadge(caseItem.status)}`}>
                       {caseItem.status}
                     </span>
                   </div>
-                  <p className="font-body-sm text-on-surface-variant mt-1">
+                  <p className="text-sm text-muted mt-1">
                     {caseItem.analysis_count} analysis{caseItem.analysis_count !== 1 ? 'es' : ''} • {caseItem.note_count} note{caseItem.note_count !== 1 ? 's' : ''}
                   </p>
                 </div>
-                <div className="text-sm text-on-surface-variant">
+                <div className="font-mono text-xs text-muted flex-shrink-0">
                   {new Date(caseItem.created_at).toLocaleDateString()}
                 </div>
               </div>

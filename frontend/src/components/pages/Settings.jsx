@@ -38,38 +38,39 @@ const Settings = () => {
   };
 
   return (
-    <div className="space-y-4 pt-4 md:pt-0 w-full max-w-full">
-      <header>
-        <h2 className="font-headline-md text-headline-md font-bold text-primary">Settings</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant">Manage your account and preferences.</p>
-      </header>
+    <div className="space-y-6 pt-4 md:pt-0 w-full max-w-full">
+      {/* Page Header */}
+      <div>
+        <h1 className="font-display text-2xl font-bold text-on-surface">Settings</h1>
+        <p className="text-muted text-sm">Manage your account and preferences.</p>
+      </div>
 
       {/* Profile */}
-      <div className="glass-card p-6 rounded-xl w-full">
-        <h3 className="font-headline-sm text-headline-sm text-primary mb-4">Profile</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between border-b border-outline-variant/10 pb-2">
-            <span className="font-body-md text-on-surface-variant">Username</span>
-            <span className="font-body-md text-on-surface">{user?.username || '—'}</span>
+      <div className="glass-card p-6 rounded-xl">
+        <h3 className="font-display text-sm font-semibold text-on-surface mb-4">Profile</h3>
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-glass-border pb-3">
+            <span className="text-sm text-muted">Username</span>
+            <span className="text-sm text-on-surface font-medium">{user?.username || '—'}</span>
           </div>
-          <div className="flex justify-between border-b border-outline-variant/10 pb-2">
-            <span className="font-body-md text-on-surface-variant">Email</span>
-            <span className="font-body-md text-on-surface">{user?.email || '—'}</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-glass-border pb-3">
+            <span className="text-sm text-muted">Email</span>
+            <span className="text-sm text-on-surface font-medium">{user?.email || '—'}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="font-body-md text-on-surface-variant">Account Created</span>
-            <span className="font-body-md text-on-surface">{user?.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <span className="text-sm text-muted">Account Created</span>
+            <span className="text-sm text-on-surface font-medium">{user?.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}</span>
           </div>
         </div>
       </div>
 
       {/* Appearance */}
-      <div className="glass-card p-6 rounded-xl w-full">
-        <h3 className="font-headline-sm text-headline-sm text-primary mb-4">Appearance</h3>
+      <div className="glass-card p-6 rounded-xl">
+        <h3 className="font-display text-sm font-semibold text-on-surface mb-4">Appearance</h3>
         <div className="flex items-center justify-between">
-          <span className="font-body-md text-on-surface-variant">Theme</span>
+          <span className="text-sm text-muted">Theme</span>
           <div className="flex items-center gap-3">
-            <span className="font-body-sm text-on-surface-variant capitalize">{theme}</span>
+            <span className="font-label-code text-xs text-muted uppercase tracking-wider">{theme}</span>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg glass-card hover:bg-primary/10 transition-colors"
@@ -83,36 +84,38 @@ const Settings = () => {
       </div>
 
       {/* Security */}
-      <div className="glass-card p-6 rounded-xl w-full">
-        <h3 className="font-headline-sm text-headline-sm text-primary mb-4">Security</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between border-b border-outline-variant/10 pb-2">
-            <span className="font-body-md text-on-surface-variant">Authentication Status</span>
-            <span className="font-body-md text-secondary flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-              Authenticated
+      <div className="glass-card p-6 rounded-xl">
+        <h3 className="font-display text-sm font-semibold text-on-surface mb-4">Security</h3>
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-glass-border pb-3">
+            <span className="text-sm text-muted">Authentication Status</span>
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-status-safe animate-pulse shadow-[0_0_10px_rgba(0,210,106,0.3)]" />
+              <span className="text-sm text-status-safe font-medium">Authenticated</span>
             </span>
           </div>
-          <div className="flex justify-between">
-            <span className="font-body-md text-on-surface-variant">Session</span>
-            <span className="font-body-md text-on-surface-variant">Active</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <span className="text-sm text-muted">Session</span>
+            <span className="text-sm text-on-surface font-medium">Active</span>
           </div>
         </div>
       </div>
 
       {/* Audit Logs */}
-      <div className="glass-card p-6 rounded-xl w-full">
-        <h3 className="font-headline-sm text-headline-sm text-primary mb-4">Recent Activity (Audit Logs)</h3>
+      <div className="glass-card p-6 rounded-xl">
+        <h3 className="font-display text-sm font-semibold text-on-surface mb-4">Recent Activity</h3>
         {loadingLogs ? (
-          <div className="text-center py-4 text-on-surface-variant">Loading logs...</div>
+          <div className="flex items-center justify-center py-8">
+            <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+          </div>
         ) : auditLogs.length === 0 ? (
-          <div className="text-center py-4 text-on-surface-variant">No audit logs yet.</div>
+          <div className="text-center py-8 text-muted text-sm">No audit logs yet.</div>
         ) : (
           <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
             {auditLogs.map((log) => (
-              <div key={log.id} className="flex justify-between items-center py-2 border-b border-outline-variant/10 text-sm">
-                <span className="text-on-surface">{getActionDisplay(log.action)}</span>
-                <span className="text-on-surface-variant">{new Date(log.created_at).toLocaleString()}</span>
+              <div key={log.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-glass-border/50 last:border-0">
+                <span className="text-sm text-on-surface">{getActionDisplay(log.action)}</span>
+                <span className="font-mono text-xs text-muted">{new Date(log.created_at).toLocaleString()}</span>
               </div>
             ))}
           </div>
