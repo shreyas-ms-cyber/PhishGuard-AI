@@ -131,42 +131,41 @@ const AIChat = () => {
 
   return (
     <div className="flex flex-col h-full w-full max-w-full pt-4 md:pt-0">
-      {/* Header */}
       <header className="mb-4">
-        <h1 className="font-headline-md text-headline-md font-bold text-primary">AI Security Assistant</h1>
-        <p className="font-body-md text-body-md text-on-surface-variant">Ask me about cybersecurity fundamentals, best practices, and threat awareness.</p>
+        <h1 className="font-display text-2xl font-bold text-on-surface">AI Security Assistant</h1>
+        <p className="text-muted text-sm">Ask me about cybersecurity fundamentals, best practices, and threat awareness.</p>
       </header>
 
-      {/* History Section */}
+      {/* History Section – fixed layout */}
       <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">History</h3>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
+          <h3 className="font-label-code text-[10px] text-muted uppercase tracking-wider">History</h3>
           <button
             onClick={newChat}
-            className="btn-primary text-xs py-1 px-3 flex items-center gap-1"
+            className="btn-primary text-xs py-1.5 px-4 flex items-center gap-1 flex-shrink-0"
           >
             <span className="material-symbols-outlined text-sm">add</span>
             New Chat
           </button>
         </div>
-        <div className="space-y-1">
+        <div className="flex flex-wrap gap-2">
           {chats.map((chat) => (
             <div
               key={chat.id}
-              className={`group flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+              className={`group flex items-center gap-1 px-3 py-1.5 rounded-full cursor-pointer transition-colors ${
                 activeChatId === chat.id
-                  ? 'bg-primary/10 border-l-2 border-primary'
-                  : 'hover:bg-surface-variant/10'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'bg-surface/30 text-on-surface-variant hover:bg-surface/50'
               }`}
               onClick={() => setActiveChatId(chat.id)}
             >
-              <span className="font-body-sm text-sm text-on-surface truncate flex-1">{chat.title}</span>
+              <span className="font-body-sm text-sm max-w-[120px] truncate">{chat.title}</span>
               <button
                 onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-                className="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-opacity p-1 text-sm"
+                className="text-muted hover:text-error transition-colors"
                 aria-label="Delete chat"
               >
-                ×
+                <span className="material-symbols-outlined text-sm">close</span>
               </button>
             </div>
           ))}
@@ -185,7 +184,7 @@ const AIChat = () => {
                 className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                   msg.role === 'user'
                     ? 'bg-primary-container text-on-primary-container'
-                    : 'bg-surface-container-highest/50 text-on-surface'
+                    : 'bg-surface/50 border-l-2 border-accent-purple text-on-surface'
                 }`}
               >
                 <p className="font-body-md whitespace-pre-wrap break-words">{msg.content}</p>
@@ -194,7 +193,7 @@ const AIChat = () => {
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-surface-container-highest/50 rounded-2xl px-4 py-3 flex items-center gap-2">
+              <div className="bg-surface/50 rounded-2xl px-4 py-3 flex items-center gap-2">
                 <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
                 <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
                 <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
@@ -204,12 +203,11 @@ const AIChat = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
-        <div className="p-4 border-t border-outline-variant/10 flex-shrink-0">
+        <div className="p-4 border-t border-glass-border flex-shrink-0">
           <div className="flex gap-3">
             <textarea
               rows="1"
-              className="flex-1 bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-3 text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none font-body-md"
+              className="flex-1 bg-input border border-glass-border rounded-lg p-3 text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all resize-none font-body-md"
               placeholder="Ask a cybersecurity question..."
               value={input}
               onChange={(e) => setInput(e.target.value)}

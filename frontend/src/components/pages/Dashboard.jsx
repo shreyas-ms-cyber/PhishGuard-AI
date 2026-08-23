@@ -316,7 +316,7 @@ const Dashboard = () => {
           <p className="text-muted text-sm">Real-time threat intelligence overview.</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="glass-card px-4 py-2 rounded-lg flex items-center gap-2">
+          <div className="glass-card px-4 py-2 rounded-lg flex items-center gap-2 border border-status-safe/20">
             <span className="material-symbols-outlined text-primary text-sm">bolt</span>
             <span className="font-label-code text-[10px] text-secondary uppercase tracking-wider">Live Feed</span>
             <span className="w-2 h-2 rounded-full bg-status-safe animate-pulse" />
@@ -327,7 +327,7 @@ const Dashboard = () => {
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((card) => (
-          <div key={card.key} className="glass-card p-4 rounded-xl hover:translate-y-[-2px] transition-all duration-200">
+          <div key={card.key} className="glass-card p-4 rounded-xl hover:translate-y-[-2px] border-t-2 transition-all duration-200">
             <div className="flex items-center gap-3">
               <div className={`p-2.5 rounded-lg ${card.color.replace('text', 'bg')}/10`}>
                 <span className={`material-symbols-outlined ${card.color}`}>{card.icon}</span>
