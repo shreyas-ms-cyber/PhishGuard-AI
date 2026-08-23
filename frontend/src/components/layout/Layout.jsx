@@ -44,8 +44,14 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row relative w-full max-w-full overflow-x-hidden bg-background">
-      {/* Mobile Header */}
-      <header className="md:hidden flex items-center justify-between p-4 glass-card z-50 sticky top-0 w-full">
+      {/* Mobile Header – now without theme toggle */}
+      <header
+        className={`md:hidden flex items-center justify-between p-4 z-50 sticky top-0 w-full transition-all duration-300 ${
+          sidebarOpen
+            ? 'bg-surface border-b border-glass-border'  // solid when sidebar is open
+            : 'glass-card'                               // glass when closed
+        }`}
+      >
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 rounded-lg hover:bg-primary/10 transition-colors"
@@ -54,27 +60,21 @@ const Layout = () => {
           <span className="material-symbols-outlined text-on-surface">menu</span>
         </button>
         <span className="font-display text-sm font-bold text-primary">PhishGuard AI</span>
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-lg hover:bg-primary/10 transition-colors"
-        >
-          <span className="material-symbols-outlined text-on-surface">
-            {theme === 'dark' ? 'light_mode' : 'dark_mode'}
-          </span>
-        </button>
+        {/* Theme toggle removed from here – only one in the top bar */}
+        <div className="w-8" /> {/* spacer for alignment */}
       </header>
 
-      {/* Sidebar */}
+      {/* Sidebar – unchanged structure */}
       <aside
         className={`
           fixed inset-y-0 left-0 z-40 w-64 flex flex-col
-          bg-surface/80 backdrop-blur-xl border-r border-glass-border
+          bg-surface/95 backdrop-blur-sm border-r border-glass-border
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           md:relative md:translate-x-0 md:flex md:flex-col md:min-h-screen
         `}
       >
-        {/* Brand */}
+        {/* Brand – renders once */}
         <div className="flex-shrink-0 p-6 pb-4 border-b border-glass-border">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
@@ -87,7 +87,7 @@ const Layout = () => {
           </div>
         </div>
 
-        {/* Navigation */}
+        {/* Navigation – unchanged */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
           {navGroups.map((group) => (
             <div key={group.label}>
@@ -119,9 +119,8 @@ const Layout = () => {
           ))}
         </nav>
 
-        {/* Footer */}
+        {/* Footer – unchanged */}
         <div className="flex-shrink-0 p-4 border-t border-glass-border space-y-3">
-          {/* Account Chip */}
           <div className="glass-card p-3 rounded-lg flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-surface/50 flex items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-on-surface text-sm">person</span>
@@ -131,7 +130,6 @@ const Layout = () => {
               <p className="font-label-code text-[10px] text-muted truncate">{user?.email || ''}</p>
             </div>
           </div>
-
           <div className="space-y-1">
             <NavLink
               to="/support"
@@ -155,26 +153,25 @@ const Layout = () => {
         </div>
       </aside>
 
-      {/* Mobile Backdrop */}
+      {/* Backdrop – more opaque */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-black/80 md:hidden"
           onClick={closeSidebar}
         />
       )}
 
       {/* Main Content */}
       <main className="flex-1 min-h-screen p-4 md:p-6 relative">
-        {/* Top Bar */}
+        {/* Top Bar – theme toggle lives here (only one) */}
         <div className="flex items-center justify-between mb-6">
-          <div className="hidden md:block">
-            {/* Page title will be rendered by child routes */}
-          </div>
+          <div className="hidden md:block" />
           <div className="flex items-center gap-3 ml-auto">
             <button className="p-2 rounded-lg glass-card text-on-surface-variant hover:text-primary transition-colors relative">
               <span className="material-symbols-outlined">notifications</span>
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-error" />
             </button>
+            {/* Single theme toggle – always visible */}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg glass-card text-on-surface-variant hover:text-primary transition-colors transition-all duration-300"
