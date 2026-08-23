@@ -44,7 +44,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row relative w-full max-w-full overflow-x-hidden bg-background">
-      {/* Mobile Header – NO theme toggle */}
+      {/* Mobile Header */}
       <header
         className={`md:hidden flex items-center justify-between p-4 z-50 sticky top-0 w-full transition-all duration-300 ${
           sidebarOpen
@@ -60,22 +60,23 @@ const Layout = () => {
           <span className="material-symbols-outlined text-on-surface">menu</span>
         </button>
         <span className="font-display text-sm font-bold text-primary">PhishGuard AI</span>
-        <div className="w-8" /> {/* spacer */}
+        <div className="w-8" />
       </header>
 
-      {/* Sidebar */}
+      {/* Sidebar - Fixed unstable logo + opaque background */}
       <aside
         className={`
           fixed inset-y-0 left-0 z-40 w-64 flex flex-col
-          bg-surface/95 backdrop-blur-sm border-r border-glass-border
+          bg-surface border-r border-glass-border
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           md:relative md:translate-x-0 md:flex md:flex-col md:min-h-screen
         `}
       >
+        {/* Brand - ALWAYS renders with icon, title, subtitle - no conditional logic */}
         <div className="flex-shrink-0 p-6 pb-4 border-b border-glass-border">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 flex-shrink-0">
               <span className="material-symbols-outlined text-primary text-sm">shield</span>
             </div>
             <div>
@@ -149,10 +150,10 @@ const Layout = () => {
         </div>
       </aside>
 
-      {/* Backdrop – now fully opaque */}
+      {/* Backdrop - Completely opaque, no blur */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/90 md:hidden"
+          className="fixed inset-0 z-30 bg-black md:hidden"
           onClick={closeSidebar}
         />
       )}
@@ -166,7 +167,6 @@ const Layout = () => {
               <span className="material-symbols-outlined">notifications</span>
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-error animate-pulse-once" />
             </button>
-            {/* Single theme toggle – only one! */}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg glass-card text-on-surface-variant hover:text-primary transition-colors transition-all duration-300"
