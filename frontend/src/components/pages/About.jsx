@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const About = () => {
   const { theme } = useTheme();
   const [imgError, setImgError] = useState(false);
-  const [imgVersion, setImgVersion] = useState(1);
-
-  useEffect(() => {
-    setImgVersion(Date.now());
-  }, []);
 
   return (
     <div className="space-y-6 pt-4 md:pt-0 w-full max-w-full">
@@ -31,30 +26,28 @@ const About = () => {
         </p>
       </div>
 
-      {/* Developer Profile */}
+      {/* Developer Profile – Photo always visible */}
       <div className="glass-card p-6 rounded-xl flex flex-col md:flex-row items-center md:items-start gap-6">
-        {/* Photo – Instant display using background-image */}
         <div className="flex-shrink-0">
           <div
-            className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.15)] bg-gradient-to-br from-primary/20 to-surface flex items-center justify-center"
+            className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-[0_0_25px_rgba(0,229,255,0.15)] flex items-center justify-center"
             style={{
-              backgroundImage: !imgError ? `url('/assets/images/profile-photo.jpg?v=${imgVersion}')` : 'none',
+              backgroundImage: `url('/assets/images/profile-photo.jpg')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
           >
-            {imgError ? (
+            {/* Fallback visible only if image fails */}
+            {imgError && (
               <span className="font-display text-4xl md:text-5xl text-primary font-bold">SM</span>
-            ) : (
-              // Invisible img to detect load error
-              <img
-                src={`/assets/images/profile-photo.jpg?v=${imgVersion}`}
-                alt=""
-                className="w-0 h-0 opacity-0 pointer-events-none"
-                onError={() => setImgError(true)}
-                onLoad={() => {}}
-              />
             )}
+            <img
+              src="/assets/images/profile-photo.jpg"
+              alt="Shreyas M S"
+              className="w-full h-full object-cover"
+              style={{ display: 'none' }}
+              onError={() => setImgError(true)}
+            />
           </div>
         </div>
 
