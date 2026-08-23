@@ -9,7 +9,13 @@ export const ThemeProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    const root = document.documentElement;
+    // Remove old theme class
+    root.classList.remove('dark', 'light');
+    // Add new theme class for Tailwind
+    root.classList.add(theme);
+    // Set data attribute for CSS variables
+    root.setAttribute('data-theme', theme);
     localStorage.setItem('phishguard-theme', theme);
   }, [theme]);
 
@@ -28,6 +34,8 @@ export const ThemeProvider = ({ children }) => {
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) throw new Error('useTheme must be used within ThemeProvider');
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
   return context;
 };
