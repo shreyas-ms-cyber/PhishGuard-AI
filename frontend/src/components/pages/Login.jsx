@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import AuthCard from '../auth/AuthCard';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -25,100 +26,108 @@ const Login = () => {
   };
 
   return (
-    <div className="relative z-10 w-full max-w-md mx-auto px-margin-mobile md:px-0 flex items-center justify-center min-h-screen">
-      <div className="w-full">
-        <div className="flex flex-col items-center mb-8 text-center">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 border border-primary/20 shadow-[0_0_20px_rgba(0,218,243,0.2)]">
-            {/* Inline SVG Shield – no font loading, no flicker */}
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-primary">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <path d="M9 12l2 2 4-4" />
-            </svg>
-          </div>
-          <h1 className="font-headline-md text-headline-md text-primary font-bold tracking-tight">PhishGuard AI</h1>
-          <p className="font-label-code text-label-code text-on-surface-variant uppercase tracking-widest mt-1 opacity-60">System Protocol: Active</p>
-        </div>
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+      <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
 
-        <div className="glass-card p-6 rounded-xl overflow-hidden">
-          <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="font-headline-sm text-headline-sm text-on-surface">Welcome Back, Agent</h2>
-              <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">Authenticate to access the neural firewall.</p>
+      <AuthCard
+        title="Welcome Back, Agent"
+        subtitle="Authenticate to access the neural firewall."
+      >
+        {error && (
+          <div className="bg-error/10 border border-error/20 text-error p-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-1.5">
+            <label className="font-label-code text-[10px] text-on-surface-variant uppercase tracking-wider" htmlFor="email">
+              Operator Identifier
+            </label>
+            <div className="relative group">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xl transition-colors group-focus-within:text-primary">
+                mail
+              </span>
+              <input
+                id="email"
+                type="email"
+                className="w-full bg-input border border-glass-border rounded-lg py-3 pl-11 pr-4 text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all font-body-md"
+                placeholder="agent@phishguard.ai"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-            {error && (
-              <div className="bg-error/10 border border-error/20 text-error p-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label className="font-label-code text-label-code text-on-surface-variant block uppercase" htmlFor="email">Operator Identifier</label>
-                <div className="relative group input-focus-glow transition-all duration-300 rounded-lg">
-                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl transition-colors group-focus-within:text-primary">mail</span>
-                  <input
-                    id="email"
-                    type="email"
-                    className="w-full bg-surface-variant/20 border-0 border-b border-outline-variant/40 py-3 pl-11 pr-4 placeholder:text-outline-variant focus:ring-0 focus:border-primary transition-all font-body-md rounded-t-lg"
-                    style={{ color: 'var(--input-text)' }}
-                    placeholder="agent@phishguard.ai"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <label className="font-label-code text-label-code text-on-surface-variant block uppercase" htmlFor="password">Encrypted Key</label>
-                </div>
-                <div className="relative group input-focus-glow transition-all duration-300 rounded-lg">
-                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl transition-colors group-focus-within:text-primary">lock_open</span>
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    className="w-full bg-surface-variant/20 border-0 border-b border-outline-variant/40 py-3 pl-11 pr-4 placeholder:text-outline-variant focus:ring-0 focus:border-primary transition-all font-body-md rounded-t-lg"
-                    style={{ color: 'var(--input-text)' }}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    <span className="material-symbols-outlined text-xl">{showPassword ? 'visibility_off' : 'visibility'}</span>
-                  </button>
-                </div>
-              </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex justify-between items-center">
+              <label className="font-label-code text-[10px] text-on-surface-variant uppercase tracking-wider" htmlFor="password">
+                Encrypted Key
+              </label>
+            </div>
+            <div className="relative group">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xl transition-colors group-focus-within:text-primary">
+                lock_open
+              </span>
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                className="w-full bg-input border border-glass-border rounded-lg py-3 pl-11 pr-12 text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all font-body-md"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
               <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary w-full"
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-surface transition-colors"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                {loading ? 'Authenticating...' : 'Sign In'}
-                <span className="material-symbols-outlined">{loading ? 'sync' : 'arrow_forward'}</span>
+                <span className="material-symbols-outlined text-xl">
+                  {showPassword ? 'visibility_off' : 'visibility'}
+                </span>
               </button>
-            </form>
-          </div>
-          <div className="bg-surface-container-high/50 border-t border-outline-variant/10 px-6 py-4 mt-6 flex justify-between items-center -mx-6 -mb-6 rounded-b-xl">
-            <span className="font-label-code text-label-code text-outline uppercase">Auth Status</span>
-            <div className="flex gap-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-secondary animate-pulse shadow-[0_0_10px_rgba(65,238,130,0.5)]"></div>
-              <span className="font-label-code text-label-code text-secondary">Secure Gateways Ready</span>
             </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary w-full justify-center py-3 text-base"
+          >
+            {loading ? (
+              <>
+                <span className="material-symbols-outlined animate-spin">sync</span>
+                Authenticating...
+              </>
+            ) : (
+              <>
+                Sign In
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </>
+            )}
+          </button>
+        </form>
+
+        <div className="pt-4 mt-4 border-t border-glass-border flex justify-between items-center">
+          <span className="font-label-code text-[10px] text-muted uppercase tracking-wider">Auth Status</span>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-status-safe animate-pulse shadow-[0_0_10px_rgba(0,210,106,0.3)]" />
+            <span className="font-label-code text-[10px] text-status-safe uppercase tracking-wider">Secure Gateways Ready</span>
           </div>
         </div>
 
-        <p className="text-center mt-6 text-on-surface-variant">
-          Don't have an account? <Link to="/register" className="text-primary hover:underline">Register</Link>
+        <p className="text-center text-sm text-on-surface-variant">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-primary hover:underline transition-colors">
+            Register
+          </Link>
         </p>
-
-        <footer className="mt-8 text-center">
-          <p className="font-label-code text-label-code text-outline-variant">© 2026 PhishGuard Intelligence Systems. Authorized Access Only.</p>
-        </footer>
-      </div>
+      </AuthCard>
     </div>
   );
 };
