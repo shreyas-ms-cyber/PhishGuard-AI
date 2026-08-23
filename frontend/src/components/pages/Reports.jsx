@@ -20,6 +20,7 @@ const Reports = () => {
   const [format, setFormat] = useState('pdf');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -38,10 +39,10 @@ const Reports = () => {
   };
 
   const generateReport = async () => {
-    setLoading(true);
     setError('');
+    setIsGenerating(true);
+
     try {
-      // Fetch all pages (max 100 per request)
       let allItems = [];
       let offset = 0;
       const limit = 100;
@@ -73,7 +74,7 @@ const Reports = () => {
 
       if (allItems.length === 0) {
         setError('No data found for the selected filters.');
-        setLoading(false);
+        setIsGenerating(false);
         return;
       }
 
@@ -89,6 +90,7 @@ const Reports = () => {
       const headers = [['ID', 'Date', 'Subject', 'Risk Score', 'Risk Level']];
 
       if (format === 'csv') {
+        // Generate CSV
         const csvContent = [
           headers[0].join(','),
           ...rows.map(row => row.join(','))
@@ -101,19 +103,24 @@ const Reports = () => {
         a.click();
         URL.revokeObjectURL(url);
       } else {
+        // Generate PDF
         const doc = new jsPDF('landscape', 'pt', 'a4');
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(16);
+        doc.setFontSize(18);
+        doc.setTextColor(0, 229, 255);
         doc.text('PhishGuard AI - Analysis Report', 40, 40);
+
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         doc.setTextColor(100);
         doc.text(`Generated: ${new Date().toLocaleString()}`, 40, 60);
-        doc.setTextColor(0);
+        doc.text(`Total Analyses: ${allItems.length}`, 40, 76);
 
+        doc.setTextColor(0);
         autoTable(doc, {
           head: headers,
           body: rows,
-          startY: 80,
+          startY: 100,
           styles: { fontSize: 8, cellPadding: 4 },
           headStyles: { fillColor: [0, 150, 200] },
           alternateRowStyles: { fillColor: [240, 240, 240] }
@@ -125,56 +132,61 @@ const Reports = () => {
       setError('Failed to generate report. Please try again.');
       console.error('Report generation error:', err);
     } finally {
-      setLoading(false);
+      setIsGenerating(false);
     }
   };
 
+  const statCards = [
+    { key: 'total', label: 'Total', value: stats.total, icon: 'analytics', color: 'text-primary' },
+    { key: 'safe', label: 'Safe', value: stats.safe, icon: 'check_circle', color: 'text-status-safe' },
+    { key: 'suspicious', label: 'Suspicious', value: stats.suspicious, icon: 'warning', color: 'text-status-suspicious' },
+    { key: 'high_risk', label: 'High Risk', value: stats.high_risk, icon: 'error', color: 'text-status-high-risk' },
+  ];
+
   return (
-    <div className="space-y-4 pt-4 md:pt-0 w-full max-w-full">
-      <header>
-        <h2 className="font-headline-md text-headline-md font-bold text-primary">Reports</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant">Generate and download analysis reports.</p>
-      </header>
+    <div className="space-y-6 pt-4 md:pt-0 w-full max-w-full">
+      {/* Page Header */}
+      <div>
+        <h1 className="font-display text-2xl font-bold text-on-surface">Reports</h1>
+        <p className="text-muted text-sm">Generate and download analysis reports.</p>
+      </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
-        <div className="glass-card p-4 rounded-xl w-full">
-          <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">Total</p>
-          <p className="font-headline-sm text-headline-sm text-on-surface">{stats.total}</p>
-        </div>
-        <div className="glass-card p-4 rounded-xl w-full">
-          <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">Safe</p>
-          <p className="font-headline-sm text-headline-sm text-secondary">{stats.safe}</p>
-        </div>
-        <div className="glass-card p-4 rounded-xl w-full">
-          <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">Suspicious</p>
-          <p className="font-headline-sm text-headline-sm text-tertiary-container">{stats.suspicious}</p>
-        </div>
-        <div className="glass-card p-4 rounded-xl w-full">
-          <p className="font-label-code text-label-code text-on-surface-variant uppercase text-xs">High Risk</p>
-          <p className="font-headline-sm text-headline-sm text-error">{stats.high_risk}</p>
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {statCards.map((card) => (
+          <div key={card.key} className="glass-card p-4 rounded-xl">
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${card.color.replace('text', 'bg')}/10`}>
+                <span className={`material-symbols-outlined ${card.color}`}>{card.icon}</span>
+              </div>
+              <div>
+                <p className="font-label-code text-[10px] text-muted uppercase tracking-wider">{card.label}</p>
+                <p className="font-display text-xl font-bold text-on-surface">{card.value}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Filters */}
-      <div className="glass-card p-4 rounded-xl w-full">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <div className="glass-card p-5 rounded-xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="font-label-code text-label-code text-on-surface-variant block mb-1">Search</label>
+            <label className="font-label-code text-[10px] text-muted uppercase tracking-wider block mb-1.5">Search</label>
             <input
               type="text"
               placeholder="ID or subject..."
               value={filters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
-              className="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-2 text-sm text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary/50"
+              className="w-full bg-input border border-glass-border rounded-lg p-2.5 text-sm text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
             />
           </div>
           <div>
-            <label className="font-label-code text-label-code text-on-surface-variant block mb-1">Risk Level</label>
+            <label className="font-label-code text-[10px] text-muted uppercase tracking-wider block mb-1.5">Risk Level</label>
             <select
               value={filters.risk_level}
               onChange={(e) => handleFilterChange('risk_level', e.target.value)}
-              className="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-2 text-sm text-on-surface focus:outline-none focus:border-primary/50"
+              className="w-full bg-input border border-glass-border rounded-lg p-2.5 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
             >
               <option value="">All</option>
               <option value="Safe">Safe</option>
@@ -183,63 +195,79 @@ const Reports = () => {
             </select>
           </div>
           <div>
-            <label className="font-label-code text-label-code text-on-surface-variant block mb-1">Start Date</label>
+            <label className="font-label-code text-[10px] text-muted uppercase tracking-wider block mb-1.5">Start Date</label>
             <input
               type="date"
               value={filters.start_date}
               onChange={(e) => handleFilterChange('start_date', e.target.value)}
-              className="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-2 text-sm text-on-surface focus:outline-none focus:border-primary/50"
+              className="w-full bg-input border border-glass-border rounded-lg p-2.5 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
             />
           </div>
           <div>
-            <label className="font-label-code text-label-code text-on-surface-variant block mb-1">End Date</label>
+            <label className="font-label-code text-[10px] text-muted uppercase tracking-wider block mb-1.5">End Date</label>
             <input
               type="date"
               value={filters.end_date}
               onChange={(e) => handleFilterChange('end_date', e.target.value)}
-              className="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg p-2 text-sm text-on-surface focus:outline-none focus:border-primary/50"
+              className="w-full bg-input border border-glass-border rounded-lg p-2.5 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
             />
           </div>
         </div>
       </div>
 
-      {/* Format Selection & Generate */}
-      <div className="glass-card p-4 rounded-xl w-full flex flex-col md:flex-row items-center gap-4">
-        <div className="flex items-center gap-4">
-          <label className="font-label-code text-label-code text-on-surface-variant">Format</label>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setFormat('pdf')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${format === 'pdf' ? 'bg-primary/20 text-primary border border-primary/30' : 'glass-card text-on-surface-variant hover:text-primary'}`}
-            >
-              PDF
-            </button>
-            <button
-              onClick={() => setFormat('csv')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${format === 'csv' ? 'bg-primary/20 text-primary border border-primary/30' : 'glass-card text-on-surface-variant hover:text-primary'}`}
-            >
-              CSV
-            </button>
+      {/* Report Generation */}
+      <div className="glass-card p-6 rounded-xl">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            <span className="font-label-code text-xs text-muted uppercase tracking-wider">Format</span>
+            <div className="flex gap-2 bg-input rounded-lg p-1 border border-glass-border">
+              <button
+                onClick={() => setFormat('pdf')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  format === 'pdf'
+                    ? 'bg-primary text-inverse shadow-sm'
+                    : 'text-muted hover:text-on-surface'
+                }`}
+              >
+                PDF
+              </button>
+              <button
+                onClick={() => setFormat('csv')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  format === 'csv'
+                    ? 'bg-primary text-inverse shadow-sm'
+                    : 'text-muted hover:text-on-surface'
+                }`}
+              >
+                CSV
+              </button>
+            </div>
           </div>
+
+          <button
+            onClick={generateReport}
+            disabled={isGenerating}
+            className="btn-primary w-full md:w-auto justify-center py-2.5 px-6"
+          >
+            {isGenerating ? (
+              <>
+                <span className="material-symbols-outlined animate-spin">sync</span>
+                Generating...
+              </>
+            ) : (
+              <>
+                <span className="material-symbols-outlined">file_download</span>
+                Generate Report
+              </>
+            )}
+          </button>
         </div>
-        <button
-          onClick={generateReport}
-          disabled={loading}
-          className="btn-primary w-full md:w-auto"
-        >
-          {loading ? (
-            <>
-              <span className="material-symbols-outlined animate-spin">sync</span>
-              Generating...
-            </>
-          ) : (
-            <>
-              <span className="material-symbols-outlined">file_download</span>
-              Generate Report
-            </>
-          )}
-        </button>
-        {error && <p className="text-error text-sm">{error}</p>}
+
+        {error && (
+          <div className="mt-4 bg-error/10 border border-error/20 text-error p-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );
