@@ -363,3 +363,254 @@ input::placeholder, textarea::placeholder {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(1000%); }
 }
+
+/* ============================================================
+   ANIMATIONS & TRANSITIONS
+   ============================================================ */
+
+/* Page fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Skeleton loading */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: var(--bg-glass);
+  background-image: linear-gradient(
+    90deg,
+    var(--bg-glass) 0%,
+    var(--bg-glass-border) 50%,
+    var(--bg-glass) 100%
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Counter animation */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.count-up {
+  animation: countUp 0.4s ease-out forwards;
+}
+
+/* Card hover lift */
+.hover-lift {
+  transition: all 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .hover-lift:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Pulse dot */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-safe);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+
+/* Status badge pulse */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-badge.green {
+  background: var(--status-safe-dim);
+  color: var(--status-safe);
+}
+.status-badge.green .dot {
+  background: var(--status-safe);
+}
+
+.status-badge.amber {
+  background: var(--status-suspicious-dim);
+  color: var(--status-suspicious);
+}
+.status-badge.amber .dot {
+  background: var(--status-suspicious);
+}
+
+.status-badge.red {
+  background: var(--status-high-risk-dim);
+  color: var(--status-high-risk);
+}
+.status-badge.red .dot {
+  background: var(--status-high-risk);
+}
+
+/* Theme toggle animation */
+.theme-toggle {
+  transition: transform 0.3s ease;
+}
+.theme-toggle:hover {
+  transform: rotate(30deg);
+}
+
+/* Mobile menu slide */
+.sidebar-enter {
+  transform: translateX(-100%);
+}
+.sidebar-enter-active {
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+.sidebar-exit {
+  transform: translateX(0);
+}
+.sidebar-exit-active {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE FIXES
+   ============================================================ */
+
+@media (max-width: 640px) {
+  /* Smaller text on mobile */
+  .font-display {
+    font-size: 1.5rem !important;
+  }
+  
+  /* Full-width buttons on mobile */
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Stack stats on mobile */
+  .stat-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  /* Reduce card padding on mobile */
+  .glass-card {
+    padding: 16px;
+  }
+  
+  /* Charts on mobile */
+  .chart-container {
+    height: 200px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Sidebar overlay */
+  .sidebar-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+  
+  /* Full-width form inputs */
+  input, textarea, select {
+    font-size: 16px !important; /* Prevents iOS zoom */
+  }
+  
+  /* Stack filter bars */
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* ============================================================
+   PRINT STYLES (for reports)
+   ============================================================ */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .glass-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    background: white !important;
+  }
+}
+
+/* ============================================================
+   FOCUS STATES
+   ============================================================ */
+
+*:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-dim);
+}
