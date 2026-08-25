@@ -136,7 +136,7 @@ const AIChat = () => {
         <p className="text-muted text-sm">Ask me about cybersecurity fundamentals, best practices, and threat awareness.</p>
       </header>
 
-      {/* History Section – fixed layout */}
+      {/* History Section */}
       <div className="mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
           <h3 className="font-label-code text-[10px] text-muted uppercase tracking-wider">History</h3>
@@ -203,7 +203,8 @@ const AIChat = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4 border-t border-glass-border flex-shrink-0">
+        {/* Input Area - with proper spacing */}
+        <div className="p-4 md:p-6 border-t border-glass-border flex-shrink-0">
           <div className="flex gap-3">
             <textarea
               rows="1"
